@@ -6,3 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "simplecanvas"
 version = "0.0.1"
 readme = "README.md"
+dependencies = [
+  "jinja2",
+]
