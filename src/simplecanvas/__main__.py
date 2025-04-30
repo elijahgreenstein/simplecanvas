@@ -1,9 +1,12 @@
 import argparse
 
+from pathlib import Path
+
 from .cli import newcourse, addmod, upmod
 
 
 def main():
+    pkgdir = Path(__file__).parent
     parser = argparse.ArgumentParser(
         prog="Simple Canvas",
         description="Create a course, add a module, or upload a module.",
@@ -24,7 +27,7 @@ def main():
     parser_upmod.set_defaults(func=upmod)
     parser.add_argument("name", help="name of the course or module")
     args = parser.parse_args()
-    args.func(args.name)
+    args.func(args.name, pkgdir)
 
 
 if __name__ == "__main__":
