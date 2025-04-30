@@ -1,0 +1,14 @@
+course:
+  course_id: "{{ course_id }}"
+  course_url: {{ course_url }}
+discussion:
+  discussion_type: threaded
+  published: false
+quiz:
+  hide_results: always
+  quiz_type: assignment
+  shuffle_answers: true
+times:
+  unlock_at: "{{ unlock_at }}"
+  due_at: "{{ due_at }}"
+  lock_at: "{{ lock_at }}"
