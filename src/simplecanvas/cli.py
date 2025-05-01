@@ -21,12 +21,12 @@ _USER = {
         "due_at": "> Enter quiz deadline: ",
         "lock_at": "> Enter quiz lock time: ",
     },
-}
-_MOD = {
-    "title": "> Enter module title: ",
-    "mod_no": "> Enter module number: ",
-    "prefix": "> Enter module prefix: ",
-    "date": "> Enter quiz date: ",
+    "MODULE": {
+        "title": "> Enter module title: ",
+        "mod_no": "> Enter module number: ",
+        "prefix": "> Enter module prefix: ",
+        "date": "> Enter quiz date: ",
+    }
 }
 _LOG = {
     "newcourse": "Creating new course: '{course}'",
@@ -113,6 +113,8 @@ def _addmod(name, pkgdir, verb):
     # Check for settings
     log = VerboseLog(verb)
     log.log(1, _LOG["addmod"].format(mod=name))
+    # Get user input
+    user_input = _get_user_input(_USER["MODULE"])
 
 
 def upmod(name, pkgdir, verb):
