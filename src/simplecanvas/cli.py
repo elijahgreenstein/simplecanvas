@@ -65,7 +65,7 @@ def _get_env():
 
 def _load_yaml(file):
     with open(file) as f:
-        text = file.read()
+        text = f.read()
     return yaml.safe_load(text)
 
 
@@ -117,11 +117,14 @@ def addmod(name, pkgdir, verb):
 
 
 def _addmod(name, pkgdir, verb):
-    # Check for settings
+    # Create a logger for verbose output
     log = VerboseLog(verb)
     log.log(1, _LOG["addmod"].format(mod=name))
-    # Get user input
+    # Load course settings
+    cset = _load_yaml(_CONF / _CSET)
+    # Get user input and add course settings
     user_input = _get_user_input(_USER["MODULE"])
+    user_input.update(cset["times"])
     # Create directories
     log.log(1, _LOG["create_dir"])
     (_MOD / name).mkdir()
