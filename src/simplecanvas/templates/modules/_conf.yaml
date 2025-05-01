@@ -1,0 +1,6 @@
+title: "{{ title }}"
+mod_no: {{ mod_no }}
+item_order:
+  - [intro.md, page]
+  - [quiz.yaml, quiz]
+  - [disc.md, disc]
