@@ -3,7 +3,7 @@ import shutil
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
 
-USER = {
+_USER = {
     "token": {
         "token": "> Enter API token: ",
     },
@@ -14,6 +14,11 @@ USER = {
         "due_at": "> Enter quiz deadline: ",
         "lock_at": "> Enter quiz lock time: ",
     },
+}
+
+
+_LOG = {
+    "newcourse": "Creating new course: '{course}'",
 }
 
 
@@ -36,15 +41,23 @@ def get_user_input(prompt_dict):
     return res
 
 
-def render_tpl(prompt_dict, env, template, output_path):
-    template = env.get_template(template)
-    user = get_user_input(prompt_dict)
-    with open(output_path, "w") as f:
-        f.write(template.render(user))
-
-
 def newcourse(name, pkgdir, verb):
     """Create a new course from templates."""
+    if name.exists:
+        print(f"ERROR: '{name}' already exists.")
+    else:
+        _newcourse(name, pkgdir, verb)
+
+
+def _newcourse(name, pkgdir, verb):
+    # Create a logger for verbose output
+    log = VerboseLog(verb)
+    log.log(1, _LOG["newcourse"].format(course=name))
+    # Get user input
+    templates = ["token", "settings.yaml"]
+    user_input = {}
+    for tpl in templates:
+        user_input[tpl] = get_user_input(_USER[tpl])
     # Create directories
     conf = Path("_conf")
     for dir_path in [name, name / conf, name / "modules"]:
@@ -53,9 +66,10 @@ def newcourse(name, pkgdir, verb):
     env = Environment(
         loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
     )
-    templates = ["token", "settings.yaml"]
     for tpl in templates:
-        render_tpl(USER[tpl], env, (conf / tpl).as_posix(), name / conf / tpl)
+        template = env.get_template((conf / tpl).as_posix())
+        with open(name / conf / tpl, "w") as f:
+            f.write(template.render(user_input[tpl]))
     # Copy quiz description template
     quiz_desc = conf / "quiz-desc.md"
     shutil.copy(pkgdir / "templates" / quiz_desc, name / quiz_desc)
