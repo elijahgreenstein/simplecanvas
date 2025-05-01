@@ -90,10 +90,10 @@ class Discussion(Item):
     def __init__(self, title, body, settings):
         super().__init__(title, body)
         self.type = "Discussion"
-        self.path ="discussion_topics"
+        self.path = "discussion_topics"
         self.settings = settings
         self.body_name = "message"
-self.param = None
+        self.param = None
         self.id_name = "id"
         self.content_name = "content_id"
 
