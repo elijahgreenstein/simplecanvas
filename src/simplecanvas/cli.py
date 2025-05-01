@@ -115,6 +115,10 @@ def _addmod(name, pkgdir, verb):
     log.log(1, _LOG["addmod"].format(mod=name))
     # Get user input
     user_input = _get_user_input(_USER["MODULE"])
+    # Create directories
+    log.log(1, _LOG["create_dir"])
+    (_MOD / name).mkdir()
+    log.log(1, _LOG["create"].format(name=(_MOD / name)))
 
 
 def upmod(name, pkgdir, verb):
