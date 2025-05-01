@@ -27,7 +27,7 @@ _USER = {
         "mod_no": "> Enter module number: ",
         "prefix": "> Enter module prefix: ",
         "date": "> Enter quiz date: ",
-    }
+    },
 }
 _LOG = {
     "newcourse": "Creating new course: '{course}'",
@@ -143,4 +143,14 @@ def _addmod(name, pkgdir, verb):
 
 def upmod(name, pkgdir, verb):
     """Upload a module to Canvas through API calls."""
+    if not (_MOD / name).exists():
+        print(f"ERROR: Module '{name}' does not exist.")
+    else:
+        if (_CONF / _CSET).exists():
+            _upmod(name, pkgdir, verb)
+        else:
+            print(f"ERROR: No course settings file, '{_CONF / _CSET}'")
+
+
+def _upmod(name, pkgdir, verb):
     pass
