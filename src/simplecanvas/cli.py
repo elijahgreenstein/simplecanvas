@@ -1,4 +1,5 @@
 import shutil
+import yaml
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
@@ -60,6 +61,12 @@ def _get_env():
     return Environment(
         loader=PackageLoader("simplecanvas"), autescape=select_autoescape
     )
+
+
+def _load_yaml(file):
+    with open(file) as f:
+        text = file.read()
+    return yaml.safe_load(text)
 
 
 def newcourse(name, pkgdir, verb):
