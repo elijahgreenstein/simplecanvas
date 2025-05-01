@@ -19,6 +19,9 @@ _USER = {
 
 _LOG = {
     "newcourse": "Creating new course: '{course}'",
+    "create_dir": "- Creating directories:",
+    "create_files": "- Creating files from templates:",
+    "create": "    - {name}",
 }
 
 
@@ -43,7 +46,7 @@ def get_user_input(prompt_dict):
 
 def newcourse(name, pkgdir, verb):
     """Create a new course from templates."""
-    if name.exists:
+    if name.exists():
         print(f"ERROR: '{name}' already exists.")
     else:
         _newcourse(name, pkgdir, verb)
@@ -59,20 +62,25 @@ def _newcourse(name, pkgdir, verb):
     for tpl in templates:
         user_input[tpl] = get_user_input(_USER[tpl])
     # Create directories
+    log.log(1, _LOG["create_dir"])
     conf = Path("_conf")
     for dir_path in [name, name / conf, name / "modules"]:
         dir_path.mkdir()
+        log.log(1, _LOG["create"].format(name=dir_path))
     # Render templates and write
     env = Environment(
         loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
     )
+    log.log(1, _LOG["create_files"])
     for tpl in templates:
         template = env.get_template((conf / tpl).as_posix())
         with open(name / conf / tpl, "w") as f:
             f.write(template.render(user_input[tpl]))
+        log.log(1, _LOG["create"].format(name=name / conf / tpl))
     # Copy quiz description template
     quiz_desc = conf / "quiz-desc.md"
     shutil.copy(pkgdir / "templates" / quiz_desc, name / quiz_desc)
+    log.log(1, _LOG["create"].format(name=name / quiz_desc))
 
 
 def addmod(name, pkgdir, verb):
