@@ -17,6 +17,18 @@ USER = {
 }
 
 
+class VerboseLog:
+
+    def __init__(self, verbosity):
+        self.verbosity = verbosity
+
+    def log(self, level, message):
+        if self.verbosity >= level:
+            print(message)
+        else:
+            pass
+
+
 def get_user_input(prompt_dict):
     res = {}
     for key in prompt_dict:
