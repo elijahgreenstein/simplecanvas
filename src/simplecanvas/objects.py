@@ -20,3 +20,20 @@ class Course:
         self.path = Path(self.url.path) / "courses" / self.id
         self.disc = settings["discussion"]
         self.quiz = settings["quiz"]
+
+
+class Module:
+
+    def __init__(self, title, position, items):
+        self.title = title
+        self.position = position
+        self.items = items
+        self.path = "modules"
+        self.id = None
+        self.id_name = "id"
+
+    def get_settings(self):
+        return {"module": {"name": self.title, "position": self.position}}
+
+    def set_id(self, uid):
+        self.id = uid
