@@ -59,7 +59,7 @@ def _get_user_input(prompt_dict):
 
 def _get_env():
     return Environment(
-        loader=PackageLoader("simplecanvas"), autescape=select_autoescape
+        loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
     )
 
 
@@ -129,6 +129,16 @@ def _addmod(name, pkgdir, verb):
     log.log(1, _LOG["create_dir"])
     (_MOD / name).mkdir()
     log.log(1, _LOG["create"].format(name=(_MOD / name)))
+    # Render templates and write
+    env = _get_env()
+    log.log(1, _LOG["create_files"])
+    tpls = env.list_templates(filter_func=lambda x: x.startswith(str(_MOD)))
+    for tpl in tpls:
+        out_path = _MOD / name / Path(tpl).name
+        template = env.get_template(tpl)
+        with open(out_path, "w") as f:
+            f.write(template.render(user_input))
+        log.log(1, _LOG["create"].format(name=out_path))
 
 
 def upmod(name, pkgdir, verb):
