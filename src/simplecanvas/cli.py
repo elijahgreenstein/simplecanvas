@@ -49,11 +49,17 @@ class VerboseLog:
             pass
 
 
-def get_user_input(prompt_dict):
+def _get_user_input(prompt_dict):
     res = {}
     for key in prompt_dict:
         res[key] = input(prompt_dict[key])
     return res
+
+
+def _get_env():
+    return Environment(
+        loader=PackageLoader("simplecanvas"), autescape=select_autoescape
+    )
 
 
 def newcourse(name, pkgdir, verb):
@@ -72,16 +78,14 @@ def _newcourse(name, pkgdir, verb):
     templates = [_TOKEN, _CSET]
     user_input = {}
     for tpl in templates:
-        user_input[tpl] = get_user_input(_USER[tpl])
+        user_input[tpl] = _get_user_input(_USER[tpl])
     # Create directories
     log.log(1, _LOG["create_dir"])
     for dir_path in [name, name / _CONF, name / _MOD]:
         dir_path.mkdir()
         log.log(1, _LOG["create"].format(name=dir_path))
     # Render templates and write
-    env = Environment(
-        loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
-    )
+    env = _get_env()
     log.log(1, _LOG["create_files"])
     for tpl in templates:
         template = env.get_template(str(_CONF / tpl))
