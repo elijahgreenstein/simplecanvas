@@ -27,7 +27,7 @@ def main():
     parser_upmod.set_defaults(func=upmod)
     parser.add_argument("name", help="name of the course or module")
     args = parser.parse_args()
-    args.func(args.name, pkgdir)
+    args.func(args.name, pkgdir, args.verbose)
 
 
 if __name__ == "__main__":
