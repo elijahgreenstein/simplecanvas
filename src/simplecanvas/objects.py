@@ -11,6 +11,17 @@ class User:
     def add_course(self, course):
         self.courses.append(course)
 
+    def create(self, course, item, test=False):
+        path = course.path / item.path
+        url = course.url._replace(path=str(path)).geturl()
+        iset = item.get_settings()
+        if test:
+            return {"TEST": {"URL": url, "-H": self.auth, "json": iset}}
+        else:
+            resp = requests.post(url, headers=self.auth, json=settings)
+            item.set_id(resp.json()[item.id_name])
+            return {"RESPONSE": resp}
+
 
 class Course:
 
