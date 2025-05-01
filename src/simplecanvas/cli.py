@@ -3,6 +3,14 @@ import shutil
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
 
+_CONF = Path("_conf")
+_MOD = Path("modules")
+_TPL = Path("templates")
+_TOKEN = "token"
+_CSET = "settings.yaml"
+_QDESC = "quiz-desc.md"
+_MCONF = "_conf.yaml"
+
 _USER = {
     "token": {
         "token": "> Enter API token: ",
@@ -57,14 +65,13 @@ def _newcourse(name, pkgdir, verb):
     log = VerboseLog(verb)
     log.log(1, _LOG["newcourse"].format(course=name))
     # Get user input
-    templates = ["token", "settings.yaml"]
+    templates = [_TOKEN, _CSET]
     user_input = {}
     for tpl in templates:
         user_input[tpl] = get_user_input(_USER[tpl])
     # Create directories
     log.log(1, _LOG["create_dir"])
-    conf = Path("_conf")
-    for dir_path in [name, name / conf, name / "modules"]:
+    for dir_path in [name, name / _CONF, name / _MOD]:
         dir_path.mkdir()
         log.log(1, _LOG["create"].format(name=dir_path))
     # Render templates and write
@@ -73,13 +80,13 @@ def _newcourse(name, pkgdir, verb):
     )
     log.log(1, _LOG["create_files"])
     for tpl in templates:
-        template = env.get_template((conf / tpl).as_posix())
-        with open(name / conf / tpl, "w") as f:
+        template = env.get_template(str(_CONF / tpl))
+        with open(name / _CONF / tpl, "w") as f:
             f.write(template.render(user_input[tpl]))
-        log.log(1, _LOG["create"].format(name=name / conf / tpl))
+        log.log(1, _LOG["create"].format(name=name / _CONF / tpl))
     # Copy quiz description template
-    quiz_desc = conf / "quiz-desc.md"
-    shutil.copy(pkgdir / "templates" / quiz_desc, name / quiz_desc)
+    quiz_desc = _CONF / _QDESC
+    shutil.copy(pkgdir / _TPL / quiz_desc, name / quiz_desc)
     log.log(1, _LOG["create"].format(name=name / quiz_desc))
 
 
