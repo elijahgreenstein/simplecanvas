@@ -24,7 +24,7 @@ _USER = {
     },
     "MODULE": {
         "title": "> Enter module title: ",
-        "mod_no": "> Enter module number: ",
+        "position": "> Enter module position: ",
         "prefix": "> Enter module prefix: ",
         "date": "> Enter quiz date: ",
     },

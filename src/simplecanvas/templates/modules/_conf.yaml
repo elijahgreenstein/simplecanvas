@@ -1,5 +1,5 @@
 title: "{{ title }}"
-mod_no: {{ mod_no }}
+position: {{ position }}
 item_order:
   - [intro.md, page]
   - [quiz.yaml, quiz]
