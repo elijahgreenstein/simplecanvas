@@ -12,17 +12,15 @@ _CSET = "settings.yaml"
 _QDESC = "quiz-desc.md"
 _MCONF = "_conf.yaml"
 _USER = {
-    "token": {
+    "crs": {
         "token": "> Enter API token: ",
-    },
-    "settings.yaml": {
         "course_url": "> Enter API URL: ",
         "course_id": "> Enter course unique identifier: ",
         "unlock_at": "> Enter quiz unlock time: ",
         "due_at": "> Enter quiz deadline: ",
         "lock_at": "> Enter quiz lock time: ",
     },
-    "MODULE": {
+    "mod": {
         "title": "> Enter module title: ",
         "position": "> Enter module position: ",
         "prefix": "> Enter module prefix: ",
@@ -69,6 +67,32 @@ def _load_yaml(file):
     return yaml.safe_load(text)
 
 
+def _mkdirs(dirs, log):
+    for dpath in dirs:
+        dpath.mkdir()
+        log.log(1, _LOG["create"].format(name=dpath))
+
+
+def _render_tpls(tpls, variables):
+    res = {}
+    env = _get_env()
+    for tpl in tpls:
+        template = env.get_template(tpl)
+        res[tpl] = template.render(variables)
+    return res
+
+
+def _write_file(text, path, log):
+    with open(path, "w") as f:
+        f.write(text)
+    log.log(1, _LOG["create"].format(name=path))
+
+
+def _copy_file(from_path, to_path, log):
+    shutil.copy(from_path, to_path)
+    log.log(1, _LOG["create"].format(name=to_path))
+
+
 def newcourse(name, pkgdir, verb):
     """Create a new course from templates."""
     if name.exists():
@@ -82,27 +106,19 @@ def _newcourse(name, pkgdir, verb):
     log = VerboseLog(verb)
     log.log(1, _LOG["newcourse"].format(course=name))
     # Get user input
-    templates = [_TOKEN, _CSET]
-    user_input = {}
-    for tpl in templates:
-        user_input[tpl] = _get_user_input(_USER[tpl])
+    user_input =  _get_user_input(_USER["crs"])
     # Create directories
     log.log(1, _LOG["create_dir"])
-    for dir_path in [name, name / _CONF, name / _MOD]:
-        dir_path.mkdir()
-        log.log(1, _LOG["create"].format(name=dir_path))
-    # Render templates and write
-    env = _get_env()
+    _mkdirs([name, name / _CONF, name / _MOD], log)
+    # Render templates
+    tpaths = [str(_CONF / "token"), str(_CONF / "settings.yaml")]
+    tpls = _render_tpls(tpaths, user_input)
+    # Write files
     log.log(1, _LOG["create_files"])
-    for tpl in templates:
-        template = env.get_template(str(_CONF / tpl))
-        with open(name / _CONF / tpl, "w") as f:
-            f.write(template.render(user_input[tpl]))
-        log.log(1, _LOG["create"].format(name=name / _CONF / tpl))
+    for tpl in tpls:
+        _write_file(tpls[tpl], name / tpl, log)
     # Copy quiz description template
-    quiz_desc = _CONF / _QDESC
-    shutil.copy(pkgdir / _TPL / quiz_desc, name / quiz_desc)
-    log.log(1, _LOG["create"].format(name=name / quiz_desc))
+    _copy_file(pkgdir / _TPL / _CONF / _QDESC, name / _CONF / _QDESC, log)
 
 
 def addmod(name, pkgdir, verb):
@@ -123,22 +139,19 @@ def _addmod(name, pkgdir, verb):
     # Load course settings
     cset = _load_yaml(_CONF / _CSET)
     # Get user input and add course settings
-    user_input = _get_user_input(_USER["MODULE"])
+    user_input = _get_user_input(_USER["mod"])
     user_input.update(cset["times"])
     # Create directories
     log.log(1, _LOG["create_dir"])
-    (_MOD / name).mkdir()
-    log.log(1, _LOG["create"].format(name=(_MOD / name)))
-    # Render templates and write
+    _mkdirs([_MOD / name], log)
+    # Render templates
     env = _get_env()
+    tpaths = env.list_templates(filter_func=lambda x: x.startswith(str(_MOD)))
+    tpls = _render_tpls(tpaths, user_input)
+    # Write files
     log.log(1, _LOG["create_files"])
-    tpls = env.list_templates(filter_func=lambda x: x.startswith(str(_MOD)))
     for tpl in tpls:
-        out_path = _MOD / name / Path(tpl).name
-        template = env.get_template(tpl)
-        with open(out_path, "w") as f:
-            f.write(template.render(user_input))
-        log.log(1, _LOG["create"].format(name=out_path))
+        _write_file(tpls[tpl], _MOD / name / Path(tpl).name, log)
 
 
 def upmod(name, pkgdir, verb):
