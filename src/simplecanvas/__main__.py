@@ -12,7 +12,11 @@ def main():
         description="Create a course, add a module, or upload a module.",
     )
     parser.add_argument(
-        "-v", "--verbose", help="increase verbosity level", action="count"
+        "-v",
+        "--verbose",
+        help="increase verbosity level",
+        action="count",
+        default=0,
     )
     subparsers = parser.add_subparsers(required=True)
     parser_newcourse = subparsers.add_parser(
