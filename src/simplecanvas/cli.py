@@ -10,7 +10,6 @@ _TOKEN = "token"
 _CSET = "settings.yaml"
 _QDESC = "quiz-desc.md"
 _MCONF = "_conf.yaml"
-
 _USER = {
     "token": {
         "token": "> Enter API token: ",
@@ -23,10 +22,15 @@ _USER = {
         "lock_at": "> Enter quiz lock time: ",
     },
 }
-
-
+_MOD = {
+    "title": "> Enter module title: ",
+    "mod_no": "> Enter module number: ",
+    "prefix": "> Enter module prefix: ",
+    "date": "> Enter quiz date: ",
+}
 _LOG = {
     "newcourse": "Creating new course: '{course}'",
+    "addmod": "Adding a module: '{mod}'",
     "create_dir": "- Creating directories:",
     "create_files": "- Creating files from templates:",
     "create": "    - {name}",
@@ -92,7 +96,19 @@ def _newcourse(name, pkgdir, verb):
 
 def addmod(name, pkgdir, verb):
     """Add a module with template files."""
-    pass
+    if (_MOD / name).exists():
+        print(f"ERROR: '{name}' already exists.")
+    else:
+        if (_CONF / _CSET).exists():
+            _addmod(name, pkgdir, verb)
+        else:
+            print(f"ERROR: No course settings file, '{_CONF / _CSET}'")
+
+
+def _addmod(name, pkgdir, verb):
+    # Check for settings
+    log = VerboseLog(verb)
+    log.log(1, _LOG["addmod"].format(mod=name))
 
 
 def upmod(name, pkgdir, verb):
