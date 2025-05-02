@@ -1,3 +1,4 @@
+import json
 import subprocess
 
 from pathlib import Path
@@ -55,3 +56,10 @@ def md2html(text, shift="1"):
         cmd.append(f"--shift-heading-level-by={shift}")
     res = subprocess.run(cmd, input=btext, capture_output=True)
     return res.stdout.decode("utf-8")
+
+
+def get_meta(text, metadata_template):
+    btext = str.encode(text)
+    cmd = ["pandoc", "-f", "markdown", "--template", metadata_template]
+    res = subprocess.run(cmd, input=btext, capture_output=True)
+    return json.loads(res.stdout.decode("utf-8"))

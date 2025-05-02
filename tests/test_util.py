@@ -1,12 +1,15 @@
 import pytest
 
+from pathlib import Path
 from simplecanvas import util
+
+DATADIR = Path(__file__).parent / "data"
 
 
 @pytest.fixture
 def md_example():
-    return '''---
-title: A Markdown example
+    return """---
+title: "A Markdown example"
 ---
 
 # Level 1 heading
@@ -26,12 +29,12 @@ Some content goes here.
 ### Level 3 heading
 
 More content here.
-'''
+"""
 
 
 @pytest.fixture
 def html_from_md():
-    return '''<h2 id="level-1-heading">Level 1 heading</h2>
+    return """<h2 id="level-1-heading">Level 1 heading</h2>
 <p>Some content goes here.</p>
 <h3 id="level-2-heading">Level 2 heading</h3>
 <ul>
@@ -45,10 +48,14 @@ def html_from_md():
 </ol>
 <h4 id="level-3-heading">Level 3 heading</h4>
 <p>More content here.</p>
-'''
+"""
 
 
 def test_md2html(md_example, html_from_md):
-    check = html_from_md
     res = util.md2html(md_example)
-    assert check == res
+    assert html_from_md == res
+
+
+def test_get_meta(md_example):
+    res = util.get_meta(md_example, str(DATADIR / "metadata.json"))
+    assert res["title"] == "A Markdown example"
