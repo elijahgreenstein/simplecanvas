@@ -42,12 +42,12 @@ def test_load_course():
 
 
 def test_load_module(module_example):
-    res = loaders.load_module(TEST101 / FS.mod / "W01")
+    res = loaders.load_module(TEST101 / FS.mod / "W01", FS.mset)
     assert module_example.title == res.title
     assert module_example.position == res.position
     assert res.path == "modules"
     assert res.uid == None
     assert res.id_name == "id"
-    new_id == "123456"
+    new_id = "123456"
     res.set_id(new_id)
     assert res.uid == new_id

@@ -4,6 +4,7 @@ from pathlib import Path
 from simplecanvas.objects import (
     User,
     Course,
+    Module,
     Page,
     Discussion,
     Quiz,
@@ -27,3 +28,13 @@ def load_course(cset, qdesc=None):
     else:
         course = Course(settings)
     return course
+
+
+def load_module(mod_dir, mset):
+    mdir = Path(mod_dir)
+    mset = load_yaml(mdir / mset)
+    items = []
+    for item in mset["item_order"]:
+        pass    # TODO: Load each item by type
+    mod = Module(mset["title"], mset["position"], items)
+    return mod
