@@ -9,7 +9,6 @@ DATADIR = Path(__file__).parent / "data"
 TEST101 = DATADIR / "TEST101"
 
 
-
 @pytest.fixture
 def mdjson():
     return DATADIR / "metadata.json"
@@ -77,6 +76,29 @@ def disc_example():
 )
 
 
+@pytest.fixture
+def quiz_example():
+    title = "1.2. Quiz"
+    body = '''<h2 id="overview">Overview</h2>
+<p>A modified quiz description for the test module.</p>
+'''
+    settings = {
+        "hide_results": "always",
+        "quiz_type": "assignment",
+        "shuffle_answers": True,
+        "unlock_at": "2025-05-01T12:00:00Z",
+        "due_at": "2025-05-01T13:00:00Z",
+        "lock_at": "2025-05-01T14:00:00Z",
+    }
+    question1 = objects.QuizQuestion(
+        "What are the correct answers?",
+        correct = ["Answer 1", "Answer 2"],
+        incorrect = ["Answer 3", "Answer 4"],
+    )
+    question2 = objects.QuizQuestion("Write about a test case.")
+    return objects.Quiz(title, body, settings, [question1, question2])
+
+
 def test_load_user(user_example):
     res = loaders.load_user(TEST101 / FS.token)
     assert res.token == user_example.token
@@ -118,10 +140,9 @@ def test_load_page(page_example, mdjson):
 
 
 def test_load_disc(disc_example, mdjson):
-    course = loaders.load_course(TEST101 / FS.cset, TEST101 / FS.qdesc)
-    disc = TEST101 / FS.get_disc("W01")
-    settings = course.disc
-    res = loaders.load_disc(disc, settings, mdjson)
+    course = loaders.load_course(TEST101 / FS.cset)
+    discpath = TEST101 / FS.get_disc("W01")
+    res = loaders.load_disc(discpath, course, mdjson)
     assert res.itype == "Discussion"
     assert res.path == "discussion_topics"
     assert res.body_name == "message"
@@ -130,3 +151,4 @@ def test_load_disc(disc_example, mdjson):
     assert res.content_name == "content_id"
     assert res.title == disc_example.title
     assert res.body == disc_example.body
+    assert res.get_settings() == disc_example.get_settings()

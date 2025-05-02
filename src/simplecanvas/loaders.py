@@ -40,17 +40,17 @@ def load_module(mod_dir, mset):
     return mod
 
 
-def load_page(page, md_tpl):
-    with open(page) as f:
+def load_page(pagepath, md_tpl):
+    with open(pagepath) as f:
         text = f.read()
     title = get_meta(text, md_tpl)["title"]
     body = md2html(text)
     return Page(title, body)
 
 
-def load_disc(disc, settings, md_tpl):
-    with open(disc) as f:
+def load_disc(discpath, course, md_tpl):
+    with open(discpath) as f:
         text = f.read()
     title = get_meta(text, md_tpl)["title"]
     body = md2html(text)
-    return Discussion(title, body, settings)
+    return Discussion(title, body, course.disc)
