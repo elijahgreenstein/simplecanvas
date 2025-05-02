@@ -62,8 +62,17 @@ times:
   lock_at: "14:00:00"'''
         return settings
 
+    @pytest.fixture
+    def rendered_course_token(self):
+        return "12345ABCDE"
+
 
     def test_render_course_settings(self, user_input, rendered_course_settings):
         tpl = "_conf/settings.yaml"
         rendered = cli.render_template(tpl, user_input["course"])
         assert rendered_course_settings == rendered
+
+    def test_render_course_token(self, user_input, rendered_course_token):
+        tpl = "_conf/token"
+        rendered = cli.render_template(tpl, user_input["course"])
+        assert rendered_course_token == rendered
