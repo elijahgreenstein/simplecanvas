@@ -3,31 +3,37 @@ import yaml
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
+from simplecanvas import util
 
 
-def _get_user_input(prompt_dict):
+def get_env():
+    return Environment(
+        loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
+    )
+
+
+def get_user_input(prompt_dict):
     res = {}
     for key in prompt_dict:
         res[key] = input(prompt_dict[key])
     return res
 
 
-def _get_env():
-    return Environment(
-        loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
-    )
-
-
-def _load_yaml(file):
+def load_yaml(file):
     with open(file) as f:
         text = f.read()
     return yaml.safe_load(text)
 
 
-def _mkdirs(dirs, log):
+def mkdirs(dirs, log):
     for dpath in dirs:
         dpath.mkdir()
         log.log(1, _LOG["create"].format(name=dpath))
+
+
+def get_template_paths_from(dirname):
+    env = get_env()
+    return env.list_templates(filter_func=lambda x: x.startswith(str(dirname)))
 
 
 def _render_tpls(tpls, variables):
