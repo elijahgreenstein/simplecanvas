@@ -1,3 +1,5 @@
+import subprocess
+
 from pathlib import Path
 
 
@@ -44,3 +46,12 @@ class Logger:
             print(message)
         else:
             pass
+
+
+def md2html(text, shift="1"):
+    btext = str.encode(text)
+    cmd = ["pandoc", "-f", "markdown", "-t", "html"]
+    if shift:
+        cmd.append(f"--shift-heading-level-by={shift}")
+    res = subprocess.run(cmd, input=btext, capture_output=True)
+    return res.stdout.decode("utf-8")
