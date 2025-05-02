@@ -74,35 +74,32 @@ def load_yaml(file):
 
 def addmod(name, pkgdir, verb):
     """Add a module with template files."""
-    if (_MOD / name).exists():
-        print(f"ERROR: '{name}' already exists.")
+    cset = UserInput().course / "settings.yaml"
+    mpath = UserInput().mod / name
+    if cset.exists() and not mpath.exists():
+        # Load course settings and get user input
+        cset = load_yaml(cset)
+        user_input = get_user_input(UserInput().mod)
+        # Update user input with times from course settings
+        user_input.update(cset)
+        # Get templates and write
+        tpls = get_mod_tpls(name, user_input)
+        write_addmod(name, tpls, verb)
+    elif mpath.exists():
+        raise FileExistsError(f"'{name}' already exists.")
     else:
-        if (_CONF / _CSET).exists():
-            _addmod(name, pkgdir, verb)
-        else:
-            print(f"ERROR: No course settings file, '{_CONF / _CSET}'")
+        raise FileNotFoundError(f"No course settings file, '{cset}'.")
 
 
-def _addmod(name, pkgdir, verb):
-    # Create a logger for verbose output
-    log = VerboseLog(verb)
-    log.log(1, _LOG["addmod"].format(mod=name))
-    # Load course settings
-    cset = _load_yaml(_CONF / _CSET)
-    # Get user input and add course settings
-    user_input = _get_user_input(_USER["mod"])
-    user_input.update(cset["times"])
-    # Create directories
-    log.log(1, _LOG["create_dir"])
-    _mkdirs([_MOD / name], log)
-    # Render templates
-    env = _get_env()
-    tpaths = env.list_templates(filter_func=lambda x: x.startswith(str(_MOD)))
-    tpls = _render_tpls(tpaths, user_input)
-    # Write files
-    log.log(1, _LOG["create_files"])
-    for tpl in tpls:
-        _write_file(tpls[tpl], _MOD / name / Path(tpl).name, log)
+def get_mod_tpls(name, user_input):
+    # Get templates
+    tpl_names = get_template_paths(str(DirNames().mod))
+    # Render templates and change output path in process
+    rendered = {}
+    for tpl in tpl_names:
+        outpath = DirNames().mod / name / Path(tpl).name
+        rendered[outpath] = render_template(tpl, user_input)
+    return rendered
 
 
 def upmod(name, pkgdir, verb):
