@@ -4,6 +4,31 @@ import subprocess
 from pathlib import Path
 
 
+class FileStructure:
+
+    course = Path("_conf")
+    mod = Path("modules")
+    cset = course / "settings.yaml"
+    qdesc = course / "quiz-desc.md"
+    token = course / "token"
+    mset = "_conf.yaml"
+    intro = "intro.md"
+    quiz = "quiz.yaml"
+    disc = "disc.md"
+
+    def get_mset(self, modname):
+        return self.mod / modname / self.mset
+
+    def get_intro(self, modname):
+        return self.mod / modname / self.intro
+
+    def get_quiz(self, modname):
+        return self.mod / modname / self.quiz
+
+    def get_disc(self, modname):
+        return self.mod / modname / self.disc
+
+
 class DirNames:
 
     def __init__(self):
