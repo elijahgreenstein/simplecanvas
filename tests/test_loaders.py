@@ -152,3 +152,25 @@ def test_load_disc(disc_example, mdjson):
     assert res.title == disc_example.title
     assert res.body == disc_example.body
     assert res.get_settings() == disc_example.get_settings()
+
+
+def test_load_quiz(quiz_example, mdjson):
+    course = loaders.load_course(TEST101 / FS.cset, TEST101 / FS.qdesc)
+    quizpath = TEST101 / FS.get_quiz("W01")
+    res = loaders.load_quiz(quizpath, course, mdjson)
+    assert res.itype == "Quiz"
+    assert res.path == "quizzes"
+    assert res.body_name == "description"
+    assert res.param == "quiz"
+    assert res.id_name == "id"
+    assert res.content_name == "content_id"
+    assert res.title == quiz_example.title
+    assert res.body == quiz_example.body
+    assert res.get_settings() == quiz_example.get_settings()
+    assert len(res.questions) == len(quiz_example.questions)
+    for idx in range(len(res.questions)):
+        resQQ = res.questions[idx]
+        checkQQ = quiz_example.questions[idx]
+        assert resQQ.question == checkQQ.question
+        assert resQQ.correct == checkQQ.correct
+        assert resQQ.incorrect == checkQQ.incorrect

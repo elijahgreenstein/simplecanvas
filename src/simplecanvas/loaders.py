@@ -54,3 +54,22 @@ def load_disc(discpath, course, md_tpl):
     title = get_meta(text, md_tpl)["title"]
     body = md2html(text)
     return Discussion(title, body, course.disc)
+
+
+def load_quiz(quizpath, course, md_tpl):
+    quiz = load_yaml(quizpath)
+    title = quiz["title"]
+    if quiz["description"]:
+        body = md2html(quiz["description"])
+    else:
+        body = course.qdesc
+    settings = course.quiz
+    settings.update(quiz["times"])
+    questions = []
+    for qst in quiz["questions"]:
+        qtext = qst["question"]
+        qcor = qst["correct"] if "correct" in qst else []
+        qinc = qst["incorrect"] if "incorrect" in qst else []
+        qq = QuizQuestion(qtext, qcor, qinc)
+        questions.append(qq)
+    return Quiz(title, body, settings, questions)
