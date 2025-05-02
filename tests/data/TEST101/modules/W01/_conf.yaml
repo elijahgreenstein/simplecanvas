@@ -1,0 +1,6 @@
+title: "A test module"
+position: 3
+item_order:
+  - [intro.md, page]
+  - [quiz.yaml, quiz]
+  - [disc.md, disc]

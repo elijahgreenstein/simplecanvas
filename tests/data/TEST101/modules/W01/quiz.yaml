@@ -1,0 +1,15 @@
+title: "1.2. Quiz"
+description: null
+times:
+  unlock_at: "2025-05-01T12:00:00Z"
+  due_at: "2025-05-01T13:00:00Z"
+  lock_at: "2025-05-01T14:00:00Z"
+questions:
+  - question: "What are the correct answers?"
+    correct:
+      - "Answer 1"
+      - "Answer 2"
+    incorrect:
+      - "Answer 3"
+      - "Answer 4"
+  - question: "Write about a test case."

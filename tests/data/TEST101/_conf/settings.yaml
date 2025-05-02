@@ -1,0 +1,14 @@
+course:
+  course_id: "987"
+  course_url: example/api
+discussion:
+  discussion_type: threaded
+  published: false
+quiz:
+  hide_results: always
+  quiz_type: assignment
+  shuffle_answers: true
+times:
+  unlock_at: "12:00:00"
+  due_at: "13:00:00"
+  lock_at: "14:00:00"
