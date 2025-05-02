@@ -118,8 +118,11 @@ def test_load_page(page_example, mdjson):
 
 
 def test_load_disc(disc_example, mdjson):
-    res = loaders.load_disc(TEST101 / FS.get_disc("W01"), mdjson)
-    assert res.itype == "Page"
+    course = loaders.load_course(TEST101 / FS.cset, TEST101 / FS.qdesc)
+    disc = TEST101 / FS.get_disc("W01")
+    settings = course.disc
+    res = loaders.load_disc(disc, settings, mdjson)
+    assert res.itype == "Discussion"
     assert res.path == "discussion_topics"
     assert res.body_name == "message"
     assert res.param == None

@@ -24,7 +24,7 @@ def load_course(cset, qdesc=None):
     if qdesc:
         with open(qdesc) as f:
             quiz_desc = md2html(f.read())
-        course = Course(settings, qdesc)
+        course = Course(settings, quiz_desc)
     else:
         course = Course(settings)
     return course
@@ -46,3 +46,11 @@ def load_page(page, md_tpl):
     title = get_meta(text, md_tpl)["title"]
     body = md2html(text)
     return Page(title, body)
+
+
+def load_disc(disc, settings, md_tpl):
+    with open(disc) as f:
+        text = f.read()
+    title = get_meta(text, md_tpl)["title"]
+    body = md2html(text)
+    return Discussion(title, body, settings)
