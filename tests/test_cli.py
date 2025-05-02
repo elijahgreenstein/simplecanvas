@@ -19,7 +19,7 @@ def user_input():
             "position": "3",
             "prefix": "1",
             "date": "2025-05-01",
-        }
+        },
     }
     return user
 
@@ -65,7 +65,6 @@ times:
     @pytest.fixture
     def rendered_course_token(self):
         return "12345ABCDE"
-
 
     def test_render_course_settings(self, user_input, rendered_course_settings):
         tpl = "_conf/settings.yaml"
