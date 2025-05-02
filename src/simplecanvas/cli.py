@@ -1,5 +1,4 @@
 import shutil
-import yaml
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
