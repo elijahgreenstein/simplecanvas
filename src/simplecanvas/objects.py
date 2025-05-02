@@ -4,10 +4,10 @@ from urllib.parse import urlparse
 
 class User:
 
-    def __init__(self, token):
+    def __init__(self, token, courses=[]):
         self.token = token
-        self.auth = {"Authorization": f"Bearer {self.token}"}
-        self.courses = []
+        self.auth = {"Authorization": f"Bearer {token}"}
+        self.courses = courses
 
     def add_course(self, course):
         self.courses.append(course)
@@ -27,28 +27,29 @@ class User:
 class Course:
 
     def __init__(self, settings, quiz_desc=None):
-        self.id = settings["course"]["course_id"]
+        self.uid = settings["course"]["course_id"]
         self.url = urlparse(settings["course"]["course_url"])
-        self.path = Path(self.url.path) / "courses" / self.id
+        self.path = Path(self.url.path) / "courses" / self.uid
         self.disc = settings["discussion"]
         self.quiz = settings["quiz"]
 
 
 class Module:
 
-    def __init__(self, title, position, items):
+    path = "modules"
+    uid = None
+    id_name = "id"
+
+    def __init__(self, title, position, items=[]):
         self.title = title
         self.position = position
         self.items = items
-        self.path = "modules"
-        self.id = None
-        self.id_name = "id"
 
     def get_settings(self):
         return {"module": {"name": self.title, "position": self.position}}
 
     def set_id(self, uid):
-        self.id = uid
+        self.uid = uid
 
 
 class Item:
@@ -58,12 +59,12 @@ class Item:
         self.body = body
         self.settings = None
         self.body_name = None
-        self.id = None
+        self.uid = None
         self.id_name = None
         self.param = None
 
     def set_id(self, uid):
-        self.id = uid
+        self.uid = uid
 
     def get_settings(self):
         settings = self.settings if self.settings else {}
@@ -75,41 +76,44 @@ class Item:
 
 class Page(Item):
 
+    itype = "Page"
+    path = "pages"
+    body_name = "body"
+    param = "wiki_page"
+    id_name = "url"
+    content_name = "page_url"
+
     def __init__(self, title, body):
         super().__init__(title, body)
-        self.type = "Page"
-        self.path = "pages"
-        self.body_name = "body"
-        self.param = "wiki_page"
-        self.id_name = "url"
-        self.content_name = "page_url"
 
 
 class Discussion(Item):
 
+    itype = "Discussion"
+    path = "discussion_topics"
+    body_name = "message"
+    param = None
+    id_name = "id"
+    content_name = "content_id"
+
     def __init__(self, title, body, settings):
         super().__init__(title, body)
-        self.type = "Discussion"
-        self.path = "discussion_topics"
         self.settings = settings
-        self.body_name = "message"
-        self.param = None
-        self.id_name = "id"
-        self.content_name = "content_id"
 
 
 class Quiz(Item):
 
+    itype = "Quiz"
+    path = "quizzes"
+    body_name = "description"
+    param = "quiz"
+    id_name = "id"
+    content_name = "content_id"
+
     def __init__(self, title, body, settings, questions):
         super().__init__(title, body)
-        self.type = "Quiz"
-        self.path = "quizzes"
         self.settings = settings
-        self.body_name = "description"
         self.questions = questions
-        self.param = "quiz"
-        self.id_name = "id"
-        self.content_name = "content_id"
 
 
 class QuizQuestion:
