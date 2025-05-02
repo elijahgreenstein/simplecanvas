@@ -104,14 +104,14 @@ def get_mod_tpls(name, user_input):
 
 def upmod(name, pkgdir, verb):
     """Upload a module to Canvas through API calls."""
-    if not (_MOD / name).exists():
-        print(f"ERROR: Module '{name}' does not exist.")
+    cset = UserInput().course / "settings.yaml"
+    mpath = UserInput().mod / name
+    if cset.exists() and mpath.exists():
+        # Load course and module settings
+        cset = load_yaml(cset)
+        mset = load_yaml(mpath / "_conf.py")
+        # TODO: Load files
+    elif not mpath.exists():
+        raise FileNotFoundError(f"'{name}' does not exist.")
     else:
-        if (_CONF / _CSET).exists():
-            _upmod(name, pkgdir, verb)
-        else:
-            print(f"ERROR: No course settings file, '{_CONF / _CSET}'")
-
-
-def _upmod(name, pkgdir, verb):
-    pass
+        raise FileNotFoundError(f"No course settings file, '{cset}'.")
