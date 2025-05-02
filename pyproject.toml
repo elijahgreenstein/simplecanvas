@@ -10,3 +10,6 @@ dependencies = [
   "jinja2",
   "yaml",
 ]
+
+[tool.black]
+line-length = 80
