@@ -4,49 +4,6 @@ import yaml
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
 
-_CONF = Path("_conf")
-_MOD = Path("modules")
-_TPL = Path("templates")
-_TOKEN = "token"
-_CSET = "settings.yaml"
-_QDESC = "quiz-desc.md"
-_MCONF = "_conf.yaml"
-_USER = {
-    "crs": {
-        "token": "> Enter API token: ",
-        "course_url": "> Enter API URL: ",
-        "course_id": "> Enter course unique identifier: ",
-        "unlock_at": "> Enter quiz unlock time: ",
-        "due_at": "> Enter quiz deadline: ",
-        "lock_at": "> Enter quiz lock time: ",
-    },
-    "mod": {
-        "title": "> Enter module title: ",
-        "position": "> Enter module position: ",
-        "prefix": "> Enter module prefix: ",
-        "date": "> Enter quiz date: ",
-    },
-}
-_LOG = {
-    "newcourse": "Creating new course: '{course}'",
-    "addmod": "Adding a module: '{mod}'",
-    "create_dir": "- Creating directories:",
-    "create_files": "- Creating files from templates:",
-    "create": "    - {name}",
-}
-
-
-class VerboseLog:
-
-    def __init__(self, verbosity):
-        self.verbosity = verbosity
-
-    def log(self, level, message):
-        if self.verbosity >= level:
-            print(message)
-        else:
-            pass
-
 
 def _get_user_input(prompt_dict):
     res = {}
