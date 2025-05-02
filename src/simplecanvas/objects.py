@@ -57,11 +57,6 @@ class Item:
     def __init__(self, title, body):
         self.title = title
         self.body = body
-        self.settings = None
-        self.body_name = None
-        self.uid = None
-        self.id_name = None
-        self.param = None
 
     def set_id(self, uid):
         self.uid = uid

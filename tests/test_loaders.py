@@ -19,6 +19,14 @@ def module_example():
     return objects.Module("A test module", 3)
 
 
+@pytest.fixture
+def page_example():
+    return objects.Page(
+        "1.1. Introduction",
+        '<h2 id="overview">Overview</h2>\n<p>This is a test module.</p>\n'
+    )
+
+
 def test_load_user(user_example):
     res = loaders.load_user(TEST101 / FS.token)
     assert res.token == user_example.token
@@ -51,3 +59,16 @@ def test_load_module(module_example):
     new_id = "123456"
     res.set_id(new_id)
     assert res.uid == new_id
+
+
+def test_load_page(page_example):
+    mdjson = str(DATADIR / "metadata.json")
+    res = loaders.load_page(TEST101 / FS.get_intro("W01"), mdjson)
+    assert res.itype == "Page"
+    assert res.path == "pages"
+    assert res.body_name == "body"
+    assert res.param == "wiki_page"
+    assert res.id_name == "url"
+    assert res.content_name == "page_url"
+    assert res.title == page_example.title
+    assert res.body == page_example.body

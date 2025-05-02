@@ -10,7 +10,7 @@ from simplecanvas.objects import (
     Quiz,
     QuizQuestion,
 )
-from simplecanvas.util import md2html, load_yaml
+from simplecanvas.util import md2html, get_meta, load_yaml
 
 
 def load_user(token_path):
@@ -38,3 +38,11 @@ def load_module(mod_dir, mset):
         pass    # TODO: Load each item by type
     mod = Module(mset["title"], mset["position"], items)
     return mod
+
+
+def load_page(page, md_tpl):
+    with open(page) as f:
+        text = f.read()
+    title = get_meta(text, md_tpl)["title"]
+    body = md2html(text)
+    return Page(title, body)
