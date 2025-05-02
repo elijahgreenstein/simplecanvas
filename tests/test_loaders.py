@@ -5,7 +5,7 @@ from simplecanvas import objects, loaders, util
 
 
 FS = util.FileStructure()
-DATADIR = Path(__file__).parent/"data"
+DATADIR = Path(__file__).parent / "data"
 TEST101 = DATADIR / "TEST101"
 
 
@@ -23,13 +23,13 @@ def test_load_user(user_example):
 def test_load_course():
     res = loaders.load_course(TEST101 / FS.cset, TEST101 / FS.qdesc)
     assert res.id == "987"
-    assert res.url = "example/api"
-    assert res.path = Path("example/api/courses/987")
-    assert res.disc = {
+    assert res.url.geturl() == "example/api"
+    assert res.path == Path("example/api/courses/987")
+    assert res.disc == {
         "discussion_type": "threaded",
         "published": False,
     }
-    assert res.quiz = {
+    assert res.quiz == {
         "hide_results": "always",
         "quiz_type": "assignment",
         "shuffle_answers": True,
