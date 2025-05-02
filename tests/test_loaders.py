@@ -115,8 +115,11 @@ def test_load_course(course_example):
     assert course_example.qdesc == res.qdesc
 
 
-def test_load_module(module_example):
-    res = loaders.load_module(TEST101 / FS.mod / "W01", FS.mset)
+def test_load_module(module_example, mdjson, page_example, quiz_example,
+                     disc_example):
+    course = loaders.load_course(TEST101 / FS.cset)
+    moddir = TEST101 / FS.mod / "W01"
+    res = loaders.load_module(moddir, FS.mset, course, mdjson)
     assert module_example.title == res.title
     assert module_example.position == res.position
     assert res.path == "modules"
@@ -125,10 +128,17 @@ def test_load_module(module_example):
     new_id = "123456"
     res.set_id(new_id)
     assert res.uid == new_id
+    assert type(res.items[0]) == objects.Page
+    assert res.items[0].title == page_example.title
+    assert type(res.items[1]) == objects.Quiz
+    assert res.items[1].title == quiz_example.title
+    assert type(res.items[2]) == objects.Discussion
+    assert res.items[2].title == disc_example.title
 
 
 def test_load_page(page_example, mdjson):
-    res = loaders.load_page(TEST101 / FS.get_intro("W01"), mdjson)
+    course = loaders.load_course(TEST101 / FS.cset)
+    res = loaders.load_page(TEST101 / FS.get_intro("W01"), course, mdjson)
     assert res.itype == "Page"
     assert res.path == "pages"
     assert res.body_name == "body"

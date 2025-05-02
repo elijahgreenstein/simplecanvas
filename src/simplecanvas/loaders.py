@@ -30,17 +30,7 @@ def load_course(cset, qdesc=None):
     return course
 
 
-def load_module(mod_dir, mset):
-    mdir = Path(mod_dir)
-    mset = load_yaml(mdir / mset)
-    items = []
-    for item in mset["item_order"]:
-        pass    # TODO: Load each item by type
-    mod = Module(mset["title"], mset["position"], items)
-    return mod
-
-
-def load_page(pagepath, md_tpl):
+def load_page(pagepath, course, md_tpl):
     with open(pagepath) as f:
         text = f.read()
     title = get_meta(text, md_tpl)["title"]
@@ -73,3 +63,19 @@ def load_quiz(quizpath, course, md_tpl):
         qq = QuizQuestion(qtext, qcor, qinc)
         questions.append(qq)
     return Quiz(title, body, settings, questions)
+
+
+def load_module(mod_dir, mset, course, md_tpl):
+    func = {
+        "page": load_page,
+        "quiz": load_quiz,
+        "disc": load_disc,
+    }
+    mdir = Path(mod_dir)
+    mset = load_yaml(mdir / mset)
+    items = []
+    for item in mset["item_order"]:
+        load_func = func[item[1]]
+        items.append(load_func(mdir / item[0], course, md_tpl))
+    mod = Module(mset["title"], mset["position"], items)
+    return mod
