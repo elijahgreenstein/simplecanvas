@@ -56,13 +56,15 @@ def write_newcourse(name, tpls, verb):
     log = Logger(verb)
     log.log(1, log.msgs["newcourse"].format(course=name))
     # Make directories
-    for dname in [name / DirNames().course, name / DirNames().mod]:
+    log.log(1, log.msgs["create_dir"])
+    for dname in [name, name / DirNames().course, name / DirNames().mod]:
+        dname.mkdir()
         log.log(1, log.msgs["create"].format(name=dname))
     # Write files
     log.log(1, log.msgs["create_files"])
-    for tpl in rendered:
-        with open(tpl, "w") as f:
-            f.write(rendered[tpl])
+    for tpl in tpls:
+        with open(name/tpl, "w") as f:
+            f.write(tpls[tpl])
         log.log(1, log.msgs["create"].format(name=tpl))
 
 
@@ -74,17 +76,17 @@ def load_yaml(file):
 
 def addmod(name, pkgdir, verb):
     """Add a module with template files."""
-    cset = UserInput().course / "settings.yaml"
-    mpath = UserInput().mod / name
+    cset = DirNames().course / "settings.yaml"
+    mpath = DirNames().mod / name
     if cset.exists() and not mpath.exists():
         # Load course settings and get user input
         cset = load_yaml(cset)
         user_input = get_user_input(UserInput().mod)
         # Update user input with times from course settings
-        user_input.update(cset)
+        user_input.update(cset["times"])
         # Get templates and write
         tpls = get_mod_tpls(name, user_input)
-        write_addmod(name, tpls, verb)
+        write_mod(name, tpls, verb)
     elif mpath.exists():
         raise FileExistsError(f"'{name}' already exists.")
     else:
@@ -100,6 +102,22 @@ def get_mod_tpls(name, user_input):
         outpath = DirNames().mod / name / Path(tpl).name
         rendered[outpath] = render_template(tpl, user_input)
     return rendered
+
+
+def write_mod(name, tpls, verb):
+    # Set up logger
+    log = Logger(verb)
+    log.log(1, log.msgs["addmod"].format(mod=name))
+    # Make module directory
+    log.log(1, log.msgs["create_dir"])
+    (DirNames().mod/name).mkdir()
+    log.log(1, log.msgs["create"].format(name=DirNames().mod/name))
+    # Write files
+    log.log(1, log.msgs["create_files"])
+    for tpl in tpls:
+        with open(tpl, "w") as f:
+            f.write(tpls[tpl])
+        log.log(1, log.msgs["create"].format(name=tpl))
 
 
 def upmod(name, pkgdir, verb):
