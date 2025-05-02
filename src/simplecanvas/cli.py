@@ -3,7 +3,7 @@ import yaml
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
-from simplecanvas.util import UserInput, Logger, DirNames
+from simplecanvas.util import UserInput, Logger, DirNames, load_yaml
 
 
 def get_env():
@@ -66,12 +66,6 @@ def write_newcourse(name, tpls, verb):
         with open(name / tpl, "w") as f:
             f.write(tpls[tpl])
         log.log(1, log.msgs["create"].format(name=tpl))
-
-
-def load_yaml(file):
-    with open(file) as f:
-        text = f.read()
-    return yaml.safe_load(text)
 
 
 def addmod(name, pkgdir, verb):

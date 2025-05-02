@@ -88,3 +88,9 @@ def get_meta(text, metadata_template):
     cmd = ["pandoc", "-f", "markdown", "--template", metadata_template]
     res = subprocess.run(cmd, input=btext, capture_output=True)
     return json.loads(res.stdout.decode("utf-8"))
+
+
+def load_yaml(file):
+    with open(file) as f:
+        text = f.read()
+    return yaml.safe_load(text)
