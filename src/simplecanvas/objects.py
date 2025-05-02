@@ -26,12 +26,13 @@ class User:
 
 class Course:
 
-    def __init__(self, settings, quiz_desc=None):
+    def __init__(self, settings, qdesc=None):
         self.uid = settings["course"]["course_id"]
         self.url = urlparse(settings["course"]["course_url"])
         self.path = Path(self.url.path) / "courses" / self.uid
         self.disc = settings["discussion"]
         self.quiz = settings["quiz"]
+        self.qdesc = qdesc
 
 
 class Module:
