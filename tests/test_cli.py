@@ -2,51 +2,40 @@ import pytest
 
 from simplecanvas import cli
 
+@pytest.fixture
+def user_input_course():
+    return {
+        "token": "12345ABCDE",
+        "course_url": "example/api",
+        "course_id": "987",
+        "unlock_at": "12:00:00",
+        "due_at": "13:00:00",
+        "lock_at": "14:00:00",
+    }
+
 
 @pytest.fixture
-def user_input():
-    user = {
-        "course": {
-            "token": "12345ABCDE",
-            "course_url": "example/api",
-            "course_id": "987",
-            "unlock_at": "12:00:00",
-            "due_at": "13:00:00",
-            "lock_at": "14:00:00",
-        },
-        "mod": {
-            "title": "Test module 1",
-            "position": "3",
-            "prefix": "1",
-            "date": "2025-05-01",
-        },
+def user_input_mod():
+    return {
+        "title": "Test module 1",
+        "position": "3",
+        "prefix": "1",
+        "date": "2025-05-01",
     }
-    return user
 
 
 class TestTemplates:
 
-    @pytest.fixture
-    def tpl_names_course(self):
-        files = ["settings.yaml", "token", "quiz-desc.md"]
-        return [f"_conf/{file}" for file in files]
+    test_tpl_paths = [
+        ("_conf", ["settings.yaml", "token", "quiz-desc.md"]),
+        ("modules", ["_conf.yaml", "intro.md", "quiz.yaml", "disc.md"]),
+    ]
 
-    @pytest.fixture
-    def tpl_names_module(self):
-        files = ["_conf.yaml", "intro.md", "quiz.yaml", "disc.md"]
-        return [f"modules/{file}" for file in files]
 
-    def test_get_course_templates(self, tpl_names_course):
-        for file in tpl_names_course:
-            assert file in cli.get_template_paths_from("_conf")
-
-    def test_get_module_templates(self, tpl_names_module):
-        for file in tpl_names_module:
-            assert file in cli.get_template_paths_from("modules")
-
-    @pytest.fixture
-    def rendered_course_settings(self):
-        settings = '''course:
+    test_tpl_render = [
+        (
+            "_conf/settings.yaml",
+            '''course:
   course_id: "987"
   course_url: example/api
 discussion:
@@ -59,19 +48,34 @@ quiz:
 times:
   unlock_at: "12:00:00"
   due_at: "13:00:00"
-  lock_at: "14:00:00"'''
-        return settings
+  lock_at: "14:00:00"''',
+        ),
+        ("_conf/token", "12345ABCDE"),
+        ("_conf/quiz-desc.md", "# Overview\n\nDefault quiz description."),
+    ]
 
-    @pytest.fixture
-    def rendered_course_token(self):
-        return "12345ABCDE"
 
-    def test_render_course_settings(self, user_input, rendered_course_settings):
-        tpl = "_conf/settings.yaml"
-        rendered = cli.render_template(tpl, user_input["course"])
-        assert rendered_course_settings == rendered
+    test_tpl_render_ids = [
+        "_conf/settings.yaml",
+        "_conf/token",
+        "_conf/quiz-desc.md",
+    ]
 
-    def test_render_course_token(self, user_input, rendered_course_token):
-        tpl = "_conf/token"
-        rendered = cli.render_template(tpl, user_input["course"])
-        assert rendered_course_token == rendered
+
+    @pytest.mark.parametrize("dirn,files", test_tpl_paths)
+    def test_get_template_paths(self, dirn, files):
+        for file in files:
+            assert f"{dirn}/{file}" in cli.get_template_paths(dirn)
+
+    @pytest.mark.parametrize(
+        "tpl,rendered", test_tpl_render, ids=test_tpl_render_ids
+    )
+    def test_render_template(self, tpl, rendered, user_input_course):
+        res = cli.render_template(tpl, user_input_course)
+        assert rendered == res
+
+    def test_get_newcourse(self, user_input_course):
+        res = cli.get_newcourse(user_input_course)
+        assert dict(self.test_tpl_render) == res
+
+
