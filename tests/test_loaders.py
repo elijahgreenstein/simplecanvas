@@ -9,9 +9,43 @@ DATADIR = Path(__file__).parent / "data"
 TEST101 = DATADIR / "TEST101"
 
 
+
+@pytest.fixture
+def mdjson():
+    return DATADIR / "metadata.json"
+
+
 @pytest.fixture
 def user_example():
     return objects.User("12345ABCDE")
+
+
+@pytest.fixture
+def course_example():
+    settings = {
+        "course": {
+            "course_id": "987",
+            "course_url": "example/api",
+        },
+        "discussion": {
+            "discussion_type": "threaded",
+            "published": False,
+        },
+        "quiz": {
+            "hide_results": "always",
+            "quiz_type": "assignment",
+            "shuffle_answers": True,
+        },
+        "times": {
+            "unlock_at": "12:00:00",
+            "due_at": "13:00:00",
+            "lock_at": "14:00:00",
+        },
+    }
+    qdesc = '''<h2 id="overview">Overview</h2>
+<p>A modified quiz description for the test module.</p>
+'''
+    return objects.Course(settings, qdesc)
 
 
 @pytest.fixture
@@ -27,26 +61,36 @@ def page_example():
     )
 
 
+@pytest.fixture
+def disc_example():
+    return objects.Discussion(
+        "1.3. Discussion",
+        '''<h2 id="overview">Overview</h2>
+<p>A test discussion.</p>
+<h2 id="to-do">To-Do</h2>
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+</ul>
+''',
+        {"discussion_type": "threaded", "published": False}
+)
+
+
 def test_load_user(user_example):
     res = loaders.load_user(TEST101 / FS.token)
     assert res.token == user_example.token
     assert res.auth == user_example.auth
 
 
-def test_load_course():
+def test_load_course(course_example):
     res = loaders.load_course(TEST101 / FS.cset, TEST101 / FS.qdesc)
-    assert res.uid == "987"
-    assert res.url.geturl() == "example/api"
-    assert res.path == Path("example/api/courses/987")
-    assert res.disc == {
-        "discussion_type": "threaded",
-        "published": False,
-    }
-    assert res.quiz == {
-        "hide_results": "always",
-        "quiz_type": "assignment",
-        "shuffle_answers": True,
-    }
+    assert course_example.uid == res.uid
+    assert course_example.url == res.url
+    assert course_example.path == res.path
+    assert course_example.disc == res.disc
+    assert course_example.quiz == res.quiz
+    assert course_example.qdesc == res.qdesc
 
 
 def test_load_module(module_example):
@@ -61,8 +105,7 @@ def test_load_module(module_example):
     assert res.uid == new_id
 
 
-def test_load_page(page_example):
-    mdjson = str(DATADIR / "metadata.json")
+def test_load_page(page_example, mdjson):
     res = loaders.load_page(TEST101 / FS.get_intro("W01"), mdjson)
     assert res.itype == "Page"
     assert res.path == "pages"
@@ -72,3 +115,15 @@ def test_load_page(page_example):
     assert res.content_name == "page_url"
     assert res.title == page_example.title
     assert res.body == page_example.body
+
+
+def test_load_disc(disc_example, mdjson):
+    res = loaders.load_disc(TEST101 / FS.get_disc("W01"), mdjson)
+    assert res.itype == "Page"
+    assert res.path == "discussion_topics"
+    assert res.body_name == "message"
+    assert res.param == None
+    assert res.id_name == "id"
+    assert res.content_name == "content_id"
+    assert res.title == disc_example.title
+    assert res.body == disc_example.body
