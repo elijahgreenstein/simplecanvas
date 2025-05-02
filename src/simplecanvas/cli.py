@@ -63,7 +63,7 @@ def write_newcourse(name, tpls, verb):
     # Write files
     log.log(1, log.msgs["create_files"])
     for tpl in tpls:
-        with open(name/tpl, "w") as f:
+        with open(name / tpl, "w") as f:
             f.write(tpls[tpl])
         log.log(1, log.msgs["create"].format(name=tpl))
 
@@ -110,8 +110,8 @@ def write_mod(name, tpls, verb):
     log.log(1, log.msgs["addmod"].format(mod=name))
     # Make module directory
     log.log(1, log.msgs["create_dir"])
-    (DirNames().mod/name).mkdir()
-    log.log(1, log.msgs["create"].format(name=DirNames().mod/name))
+    (DirNames().mod / name).mkdir()
+    log.log(1, log.msgs["create"].format(name=DirNames().mod / name))
     # Write files
     log.log(1, log.msgs["create_files"])
     for tpl in tpls:
