@@ -36,13 +36,10 @@ def get_template_paths_from(dirname):
     return env.list_templates(filter_func=lambda x: x.startswith(str(dirname)))
 
 
-def _render_tpls(tpls, variables):
-    res = {}
-    env = _get_env()
-    for tpl in tpls:
-        template = env.get_template(tpl)
-        res[tpl] = template.render(variables)
-    return res
+def render_template(tpl_name, variables):
+    env = get_env()
+    template = env.get_template(tpl_name)
+    return template.render(variables)
 
 
 def _write_file(text, path, log):
