@@ -3,7 +3,7 @@ import yaml
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
-from simplecanvas import util
+from simplecanvas.util import UserInput, Logger, DirNames
 
 
 def get_env():
@@ -19,19 +19,7 @@ def get_user_input(prompt_dict):
     return res
 
 
-def load_yaml(file):
-    with open(file) as f:
-        text = f.read()
-    return yaml.safe_load(text)
-
-
-def mkdirs(dirs, log):
-    for dpath in dirs:
-        dpath.mkdir()
-        log.log(1, _LOG["create"].format(name=dpath))
-
-
-def get_template_paths_from(dirname):
+def get_template_paths(dirname):
     env = get_env()
     return env.list_templates(filter_func=lambda x: x.startswith(str(dirname)))
 
@@ -42,43 +30,46 @@ def render_template(tpl_name, variables):
     return template.render(variables)
 
 
-def _write_file(text, path, log):
-    with open(path, "w") as f:
-        f.write(text)
-    log.log(1, _LOG["create"].format(name=path))
-
-
-def _copy_file(from_path, to_path, log):
-    shutil.copy(from_path, to_path)
-    log.log(1, _LOG["create"].format(name=to_path))
-
-
 def newcourse(name, pkgdir, verb):
     """Create a new course from templates."""
     if name.exists():
-        print(f"ERROR: '{name}' already exists.")
+        raise FileExistsError(f"'{name}' already exists.")
     else:
-        _newcourse(name, pkgdir, verb)
+        user_prompts = UserInput()
+        user_input = get_user_input(user_prompts.course)
+        tpls = get_newcourse(user_input)
+        write_newcourse(name, tpls, verb)
 
 
-def _newcourse(name, pkgdir, verb):
-    # Create a logger for verbose output
-    log = VerboseLog(verb)
-    log.log(1, _LOG["newcourse"].format(course=name))
-    # Get user input
-    user_input =  _get_user_input(_USER["crs"])
-    # Create directories
-    log.log(1, _LOG["create_dir"])
-    _mkdirs([name, name / _CONF, name / _MOD], log)
+def get_newcourse(user_input):
+    # Get templates
+    tpl_names = get_template_paths(str(DirNames().course))
     # Render templates
-    tpaths = [str(_CONF / "token"), str(_CONF / "settings.yaml")]
-    tpls = _render_tpls(tpaths, user_input)
+    rendered = {}
+    for tpl in tpl_names:
+        rendered[tpl] = render_template(tpl, user_input)
+    return rendered
+
+
+def write_newcourse(name, tpls, verb):
+    # Set up logger
+    log = Logger(verb)
+    log.log(1, log.msgs["newcourse"].format(course=name))
+    # Make directories
+    for dname in [name / DirNames().course, name / DirNames().mod]:
+        log.log(1, log.msgs["create"].format(name=dname))
     # Write files
-    log.log(1, _LOG["create_files"])
-    for tpl in tpls:
-        _write_file(tpls[tpl], name / tpl, log)
-    # Copy quiz description template
-    _copy_file(pkgdir / _TPL / _CONF / _QDESC, name / _CONF / _QDESC, log)
+    log.log(1, log.msgs["create_files"])
+    for tpl in rendered:
+        with open(tpl, "w") as f:
+            f.write(rendered[tpl])
+        log.log(1, log.msgs["create"].format(name=tpl))
+
+
+def load_yaml(file):
+    with open(file) as f:
+        text = f.read()
+    return yaml.safe_load(text)
 
 
 def addmod(name, pkgdir, verb):
