@@ -1,11 +1,11 @@
 from pathlib import Path
 
-class DirStructure:
+
+class DirNames:
 
     def __init__(self):
         self.course = Path("_conf")
         self.mod = Path("modules")
-        self.tpl = Path("templates")
 
 
 class UserInput:
