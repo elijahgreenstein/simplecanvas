@@ -26,7 +26,7 @@ class User:
 
 class Course:
 
-    def __init__(self, settings, quiz_desc):
+    def __init__(self, settings, quiz_desc=None):
         self.id = settings["course"]["course_id"]
         self.url = urlparse(settings["course"]["course_url"])
         self.path = Path(self.url.path) / "courses" / self.id
