@@ -3,6 +3,7 @@ import pytest
 from pathlib import Path
 from simplecanvas import cli
 
+
 @pytest.fixture
 def user_input_course():
     return {
@@ -63,10 +64,11 @@ times:
 
 
 test_tpl_render_mod = [
-        ("modules/intro.md", '---\ntitle: "1.1. Introduction"\n---'),
-        ("modules/disc.md", '---\ntitle: "1.3. Discussion"\n---'),
-        ("modules/quiz.yaml",
-         '''title: "1.2. Quiz"
+    ("modules/intro.md", '---\ntitle: "1.1. Introduction"\n---'),
+    ("modules/disc.md", '---\ntitle: "1.3. Discussion"\n---'),
+    (
+        "modules/quiz.yaml",
+        '''title: "1.2. Quiz"
 description: null
 times:
   unlock_at: "2025-05-01T12:00:00Z"
@@ -80,14 +82,17 @@ questions:
     incorrect:
       - "Answer 3"
       - "Answer 4"
-  - question: "Write about ..."'''),
-        ("modules/_conf.yaml",
-         '''title: "Test module 1"
+  - question: "Write about ..."''',
+    ),
+    (
+        "modules/_conf.yaml",
+        """title: "Test module 1"
 position: 3
 item_order:
   - [intro.md, page]
   - [quiz.yaml, quiz]
-  - [disc.md, disc]'''),
+  - [disc.md, disc]""",
+    ),
 ]
 
 test_tpl_render_ids_crs = [
@@ -139,7 +144,7 @@ class TestAddMod:
         check = {}
         for tpl in test_tpl_render_mod:
             original = Path(tpl[0])
-            newpath = Path("modules")/mod_name/original.name
+            newpath = Path("modules") / mod_name / original.name
             check[newpath] = tpl[1]
         res = cli.get_mod_tpls(mod_name, user_input_mod)
         assert check == res
