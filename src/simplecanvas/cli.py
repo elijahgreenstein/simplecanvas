@@ -130,17 +130,20 @@ def upmod(name, pkgdir, verb):
     mdjson = pkgdir / FS.mdjson
     if cset.exists() and mpath.exists():
         # Load module
-        user = load_mod(mpath, pkgdir / FS.mdjson)
+        user = load_mod(Path("./"), mpath, pkgdir / FS.mdjson)
     elif not mpath.exists():
         raise FileNotFoundError(f"'{name}' does not exist.")
     else:
         raise FileNotFoundError(f"No course settings file, '{cset}'.")
 
 
-def load_mod(mpath, mdjson):
-    user = loaders.load_user(FS.token)
-    qdesc = FS.qdesc if FS.qdesc.exists() else None
-    course = loaders.load_course(FS.cset, qdesc)
+def load_mod(cpath, mpath, mdjson):
+    cset = cpath / FS.course / FS.cset.name
+    token = cpath / FS.course / FS.token.name
+    qdesc_path = cpath / FS.course / FS.qdesc.name
+    user = loaders.load_user(token)
+    qdesc = qdesc_path if qdesc_path.exists() else None
+    course = loaders.load_course(cset, qdesc)
     mod = loaders.load_module(mpath, FS.mset, course, mdjson)
     course.add_mod(mod)
     user.add_course(course)

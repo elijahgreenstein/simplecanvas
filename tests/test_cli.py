@@ -1,7 +1,17 @@
 import pytest
 
 from pathlib import Path
-from simplecanvas import cli
+from simplecanvas import cli, util
+
+
+FS = util.FileStructure()
+DATADIR = Path(__file__).parent / "data"
+TEST101 = DATADIR / "TEST101"
+
+
+@pytest.fixture
+def mdjson():
+    return DATADIR / "metadata.json"
 
 
 @pytest.fixture
@@ -152,3 +162,10 @@ class TestAddMod:
             check[newpath] = tpl[1]
         res = cli.get_mod_tpls(mod_name, user_input_mod)
         assert check == res
+
+
+class TestUpMod:
+    def test_load_mod(self, mod_name, mdjson):
+        modpath = TEST101 / FS.mod / mod_name
+        user = cli.load_mod(TEST101, modpath, mdjson)
+        assert user.token == "12345ABCDE"
