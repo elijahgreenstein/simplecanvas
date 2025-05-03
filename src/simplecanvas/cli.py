@@ -2,7 +2,11 @@ import shutil
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
-from simplecanvas.util import UserInput, Logger, DirNames, load_yaml
+from simplecanvas.util import UserInput, Logger, DirNames, load_yaml, FileStructure
+from simplecanvas import loaders
+
+
+FS = util.FileStructure()
 
 
 def get_env():
@@ -115,14 +119,23 @@ def write_mod(name, tpls, verb):
 
 def upmod(name, pkgdir, verb):
     """Upload a module to Canvas through API calls."""
-    cset = UserInput().course / "settings.yaml"
-    mpath = UserInput().mod / name
+    cset = FS.cset
+    mpath = FS.mod / name
+    mdjson = pkgdir / FS.mdjson
     if cset.exists() and mpath.exists():
-        # Load course and module settings
-        cset = load_yaml(cset)
-        mset = load_yaml(mpath / "_conf.py")
-        # TODO: Load files
+        # Load module
+        user = load_mod(mpath, pkgdir / FS.mdjson)
     elif not mpath.exists():
         raise FileNotFoundError(f"'{name}' does not exist.")
     else:
         raise FileNotFoundError(f"No course settings file, '{cset}'.")
+
+
+def load_mod(mpath, mdjson):
+    user = loaders.load_user(FS.token)
+    qdesc = FS.qdesc if FS.qdesc.exists() else None
+    course = loaders.load_course(FS.cset, qdesc)
+    mod = loaders.load_module(mpath, mpath / FS.mset, course, mdjson)
+    course.add_mod(mod)
+    return user.add_course(course)
+
