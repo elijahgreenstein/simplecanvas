@@ -26,6 +26,8 @@ class User:
 
 class Course:
 
+    modules = []
+
     def __init__(self, settings, qdesc=None):
         self.uid = settings["course"]["course_id"]
         self.url = urlparse(settings["course"]["course_url"])
@@ -33,6 +35,10 @@ class Course:
         self.disc = settings["discussion"]
         self.quiz = settings["quiz"]
         self.qdesc = qdesc
+
+
+    def add_mod(self, mod):
+        self.modules.append(mod)
 
 
 class Module:
