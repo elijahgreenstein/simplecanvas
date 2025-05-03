@@ -4,13 +4,13 @@ from urllib.parse import urlparse
 
 class User:
 
-    def __init__(self, token, courses=[]):
+    def __init__(self, token, courses={}):
         self.token = token
         self.auth = {"Authorization": f"Bearer {token}"}
         self.courses = courses
 
     def add_course(self, course):
-        self.courses.append(course)
+        self.courses[course.cname] = course
 
     def create(self, course, item, test=False):
         path = course.path / item.path
@@ -26,7 +26,7 @@ class User:
 
 class Course:
 
-    modules = []
+    modules = {}
 
     def __init__(self, settings, qdesc=None):
         self.cname = settings["course"]["course_name"]
@@ -38,7 +38,7 @@ class Course:
         self.qdesc = qdesc
 
     def add_mod(self, mod):
-        self.modules.append(mod)
+        self.modules[mod.mname] = mod
 
 
 class Module:
