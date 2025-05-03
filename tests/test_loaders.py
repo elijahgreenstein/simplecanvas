@@ -23,6 +23,7 @@ def user_example():
 def course_example():
     settings = {
         "course": {
+            "course_name": "TEST101",
             "course_id": "987",
             "course_url": "example/api",
         },
@@ -41,22 +42,22 @@ def course_example():
             "lock_at": "14:00:00",
         },
     }
-    qdesc = '''<h2 id="overview">Overview</h2>
+    qdesc = """<h2 id="overview">Overview</h2>
 <p>A modified quiz description for the test module.</p>
-'''
+"""
     return objects.Course(settings, qdesc)
 
 
 @pytest.fixture
 def module_example():
-    return objects.Module("A test module", 3)
+    return objects.Module("A test module", 3, "W01")
 
 
 @pytest.fixture
 def page_example():
     return objects.Page(
         "1.1. Introduction",
-        '<h2 id="overview">Overview</h2>\n<p>This is a test module.</p>\n'
+        '<h2 id="overview">Overview</h2>\n<p>This is a test module.</p>\n',
     )
 
 
@@ -64,24 +65,24 @@ def page_example():
 def disc_example():
     return objects.Discussion(
         "1.3. Discussion",
-        '''<h2 id="overview">Overview</h2>
+        """<h2 id="overview">Overview</h2>
 <p>A test discussion.</p>
 <h2 id="to-do">To-Do</h2>
 <ul>
 <li>Item 1</li>
 <li>Item 2</li>
 </ul>
-''',
-        {"discussion_type": "threaded", "published": False}
-)
+""",
+        {"discussion_type": "threaded", "published": False},
+    )
 
 
 @pytest.fixture
 def quiz_example():
     title = "1.2. Quiz"
-    body = '''<h2 id="overview">Overview</h2>
+    body = """<h2 id="overview">Overview</h2>
 <p>A modified quiz description for the test module.</p>
-'''
+"""
     settings = {
         "hide_results": "always",
         "quiz_type": "assignment",
@@ -92,8 +93,8 @@ def quiz_example():
     }
     question1 = objects.QuizQuestion(
         "What are the correct answers?",
-        correct = ["Answer 1", "Answer 2"],
-        incorrect = ["Answer 3", "Answer 4"],
+        correct=["Answer 1", "Answer 2"],
+        incorrect=["Answer 3", "Answer 4"],
     )
     question2 = objects.QuizQuestion("Write about a test case.")
     return objects.Quiz(title, body, settings, [question1, question2])
@@ -115,8 +116,9 @@ def test_load_course(course_example):
     assert course_example.qdesc == res.qdesc
 
 
-def test_load_module(module_example, mdjson, page_example, quiz_example,
-                     disc_example):
+def test_load_module(
+    module_example, mdjson, page_example, quiz_example, disc_example
+):
     course = loaders.load_course(TEST101 / FS.cset)
     moddir = TEST101 / FS.mod / "W01"
     res = loaders.load_module(moddir, FS.mset, course, mdjson)

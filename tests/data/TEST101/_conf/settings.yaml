@@ -1,4 +1,5 @@
 course:
+  course_name: "TEST101"
   course_id: "987"
   course_url: example/api
 discussion:

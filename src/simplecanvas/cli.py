@@ -2,11 +2,17 @@ import shutil
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
-from simplecanvas.util import UserInput, Logger, DirNames, load_yaml, FileStructure
+from simplecanvas.util import (
+    UserInput,
+    Logger,
+    DirNames,
+    load_yaml,
+    FileStructure,
+)
 from simplecanvas import loaders
 
 
-FS = util.FileStructure()
+FS = FileStructure()
 
 
 def get_env():
@@ -138,4 +144,3 @@ def load_mod(mpath, mdjson):
     mod = loaders.load_module(mpath, mpath / FS.mset, course, mdjson)
     course.add_mod(mod)
     return user.add_course(course)
-

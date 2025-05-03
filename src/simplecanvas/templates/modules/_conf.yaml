@@ -1,3 +1,4 @@
+module_name: "{{ module_name }}"
 title: "{{ title }}"
 position: {{ position }}
 item_order:

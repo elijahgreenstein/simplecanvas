@@ -7,6 +7,7 @@ from simplecanvas import cli
 @pytest.fixture
 def user_input_course():
     return {
+        "course_name": "TEST101",
         "token": "12345ABCDE",
         "course_url": "example/api",
         "course_id": "987",
@@ -19,6 +20,7 @@ def user_input_course():
 @pytest.fixture
 def user_input_mod():
     return {
+        "module_name": "W01",
         "title": "Test module 1",
         "position": "3",
         "prefix": "1",
@@ -44,6 +46,7 @@ test_tpl_render_crs = [
     (
         "_conf/settings.yaml",
         '''course:
+  course_name: "TEST101"
   course_id: "987"
   course_url: example/api
 discussion:
@@ -86,7 +89,8 @@ questions:
     ),
     (
         "modules/_conf.yaml",
-        """title: "Test module 1"
+        """module_name: "W01"
+title: "Test module 1"
 position: 3
 item_order:
   - [intro.md, page]

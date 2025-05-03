@@ -29,13 +29,13 @@ class Course:
     modules = []
 
     def __init__(self, settings, qdesc=None):
+        self.cname = settings["course"]["course_name"]
         self.uid = settings["course"]["course_id"]
         self.url = urlparse(settings["course"]["course_url"])
         self.path = Path(self.url.path) / "courses" / self.uid
         self.disc = settings["discussion"]
         self.quiz = settings["quiz"]
         self.qdesc = qdesc
-
 
     def add_mod(self, mod):
         self.modules.append(mod)
@@ -47,9 +47,10 @@ class Module:
     uid = None
     id_name = "id"
 
-    def __init__(self, title, position, items=[]):
+    def __init__(self, title, position, mname, items=[]):
         self.title = title
         self.position = position
+        self.mname = mname
         self.items = items
 
     def get_settings(self):

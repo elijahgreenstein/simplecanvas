@@ -77,5 +77,5 @@ def load_module(mod_dir, mset, course, md_tpl):
     for item in mset["item_order"]:
         load_func = func[item[1]]
         items.append(load_func(mdir / item[0], course, md_tpl))
-    mod = Module(mset["title"], mset["position"], items)
+    mod = Module(mset["title"], mset["position"], mset["module_name"], items)
     return mod
