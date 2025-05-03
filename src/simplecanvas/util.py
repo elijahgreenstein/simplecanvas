@@ -16,6 +16,7 @@ class FileStructure:
     intro = "intro.md"
     quiz = "quiz.yaml"
     disc = "disc.md"
+    mdjson = Path("data") / "metadata.json"
 
     def get_mset(self, modname):
         return self.mod / modname / self.mset
