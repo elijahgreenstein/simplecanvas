@@ -141,6 +141,7 @@ def load_mod(mpath, mdjson):
     user = loaders.load_user(FS.token)
     qdesc = FS.qdesc if FS.qdesc.exists() else None
     course = loaders.load_course(FS.cset, qdesc)
-    mod = loaders.load_module(mpath, mpath / FS.mset, course, mdjson)
+    mod = loaders.load_module(mpath, FS.mset, course, mdjson)
     course.add_mod(mod)
-    return user.add_course(course)
+    user.add_course(course)
+    return user
