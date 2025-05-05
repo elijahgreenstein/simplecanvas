@@ -85,6 +85,7 @@ class Page(Item):
     param = "wiki_page"
     id_name = "url"
     content_name = "page_url"
+    settings = None
 
     def __init__(self, title, body):
         super().__init__(title, body)
