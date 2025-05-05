@@ -39,7 +39,7 @@ def render_template(tpl_name, variables):
     return template.render(variables)
 
 
-def newcourse(name, pkgdir, verb):
+def newcourse(name, verb):
     """Create a new course from templates."""
     if name.exists():
         raise FileExistsError(f"'{name}' already exists.")
@@ -77,7 +77,7 @@ def write_newcourse(name, tpls, verb):
         log.log(1, log.msgs["create"].format(name=tpl))
 
 
-def addmod(name, pkgdir, verb):
+def addmod(name, verb):
     """Add a module with template files."""
     cset = DirNames().course / "settings.yaml"
     mpath = DirNames().mod / name
@@ -123,7 +123,7 @@ def write_mod(name, tpls, verb):
         log.log(1, log.msgs["create"].format(name=tpl))
 
 
-def upmod(name, pkgdir, verb):
+def upmod(name, pkgdir, verb, test):
     """Upload a module to Canvas through API calls."""
     cset = FS.cset
     mpath = FS.mod / name

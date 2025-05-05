@@ -18,6 +18,7 @@ def main():
         action="count",
         default=0,
     )
+    parser.add_argument("-t", "--test-run", help="test the command", action="store_true")
     subparsers = parser.add_subparsers(required=True)
     parser_newcourse = subparsers.add_parser(
         "newcourse", help="create new course"
@@ -31,7 +32,10 @@ def main():
     parser_upmod.set_defaults(func=upmod)
     parser.add_argument("name", help="name of the course or module")
     args = parser.parse_args()
-    args.func(Path(args.name), pkgdir, args.verbose)
+    if args.func == upmod:
+        args.func(Path(args.name), pkgdir, args.verbose, args.test_run)
+    else:
+        args.func(Path(args.name), args.verbose)
 
 
 if __name__ == "__main__":
