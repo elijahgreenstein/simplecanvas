@@ -172,9 +172,9 @@ def upload_seq(user, name, verb, test):
     log.log(1, log.msgs["upmod_mod"])
     mod_resp = user.create(course, module, test)
     if not test:
-        status = mod_resp["RESPONSE"].status_code
+        status = mod_resp.status_code
         log.log(1, log.msgs["status"].format(status=status))
-        log.log(2, log.msgs["details"].format(resp=mod_resp))
+        log.log(2, log.msgs["details"].format(resp=mod_resp.json()))
     # Create items
     item_resp = []
     for item in module.items:
@@ -182,19 +182,21 @@ def upload_seq(user, name, verb, test):
         resp = user.create(course, item, test)
         item_resp.append(resp)
         if not test:
-            status = resp["RESPONSE"].status_code
+            status = resp.status_code
             log.log(1, log.msgs["status"].format(status=status))
-            log.log(2, log.msgs["details"].format(resp=resp))
+            log.log(2, log.msgs["details"].format(resp=resp.json()))
     # Move items to module
     move_resp = []
-    for item in module.items:
+    for idx in range(len(module.items)):
+        item = module.items[idx]
         log.log(1, log.msgs["upmod_move"].format(item=item.title))
-        resp = user.move(course, module, item, test)
+        position = idx + 1
+        resp = user.move(course, module, item, position, test)
         move_resp.append(resp)
         if not test:
-            status = resp["RESPONSE"].status_code
+            status = resp.status_code
             log.log(1, log.msgs["status"].format(status=status))
-            log.log(2, log.msgs["details"].format(resp=resp))
+            log.log(2, log.msgs["details"].format(resp=resp.json()))
     # Handle quizzes
     quiz_resp = []
     for item in module.items:
@@ -203,16 +205,16 @@ def upload_seq(user, name, verb, test):
             resps = user.add_quiz_questions(course, item, test)
             if not test:
                 for resp in resps:
-                    status = resp["RESPONSE"].status_code
+                    status = resp.status_code
                     log.log(1, log.msgs["status"].format(status=status))
-                    log.log(2, log.msgs["details"].format(resp=resp))
+                    log.log(2, log.msgs["details"].format(resp=resp.json()))
             quiz_resp.append(resps)
             log.log(1, log.msgs["upmod_update_pts"].format(item=item.title))
             resp = user.update_quiz_pts(course, item, test)
             if not test:
-                status = resp["RESPONSE"].status_code
+                status = resp.status_code
                 log.log(1, log.msgs["status"].format(status=status))
-                log.log(2, log.msgs["details"].format(resp=resp))
+                log.log(2, log.msgs["details"].format(resp=resp.json()))
             quiz_resp.append(resp)
 
     # Return responses

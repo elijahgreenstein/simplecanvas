@@ -24,18 +24,23 @@ class User:
         else:
             resp = requests.post(url, headers=self.auth, json=iset)
             item.set_id(resp.json()[item.id_name])
-            return {"RESPONSE": resp.json()}
+            return resp
 
-    def move(self, course, module, item, test=False):
+    def move(self, course, module, item, pos, test=False):
         path = course.path / module.path / str(module.uid) / "items"
         url = course.url._replace(path=str(path)).geturl()
-        params = {"module_item": {item.content_name: item.uid}}
-        print(params)
+        params = {
+            "module_item": {
+                "type": item.itype,
+                "position": pos,
+                item.content_name: item.uid,
+            }
+        }
         if test:
             return {"TEST": {"URL": url, "-H": self.auth, "json": params}}
         else:
             resp = requests.post(url, headers=self.auth, json=params)
-            return {"RESPONSE": resp.json()}
+            return resp
 
     def add_quiz_questions(self, course, quiz, test=False):
         path = course.path / quiz.path / str(quiz.uid) / "questions"
@@ -48,18 +53,18 @@ class User:
                 resps.append(resp)
             else:
                 resp = requests.post(url, headers=self.auth, json=params)
-                resps.append(resp.json())
+                resps.append(resp)
         return resps
 
     def update_quiz_pts(self, course, quiz, test=False):
-        path = course.path / quiz.path / quiz.uid
+        path = course.path / quiz.path / str(quiz.uid)
         url = course.url._replace(path=str(path)).geturl()
-        params = {"points_possible": len(quiz.questions)}
+        params = {"quiz": {"points_possible": len(quiz.questions)}}
         if test:
             return {"TEST": {"URL": url, "-H": self.auth, "json": params}}
         else:
-            resp = requests.post(url, headers=self.auth, json=params)
-            return resp.json()
+            resp = requests.put(url, headers=self.auth, json=params)
+            return resp
 
 
 class Course:
