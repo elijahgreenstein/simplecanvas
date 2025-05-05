@@ -31,13 +31,6 @@ class FileStructure:
         return self.mod / modname / self.disc
 
 
-class DirNames:
-
-    def __init__(self):
-        self.course = pathlib.Path("_conf")
-        self.mod = pathlib.Path("modules")
-
-
 class UserInput:
 
     def __init__(self):

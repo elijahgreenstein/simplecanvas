@@ -4,7 +4,6 @@ import pprint
 import jinja2
 
 from simplecanvas import loaders, objects, util
-from simplecanvas.util import DirNames
 
 
 FS = util.FileStructure()
@@ -47,7 +46,7 @@ def newcourse(name, verb):
 
 def get_newcourse(user_input):
     # Get templates
-    tpl_names = get_template_paths(str(DirNames().course))
+    tpl_names = get_template_paths(str(FS.course))
     # Render templates
     rendered = {}
     for tpl in tpl_names:
@@ -61,7 +60,7 @@ def write_newcourse(name, tpls, verb):
     log.log(1, log.msgs["newcourse"].format(course=name))
     # Make directories
     log.log(1, log.msgs["create_dir"])
-    for dname in [name, name / DirNames().course, name / DirNames().mod]:
+    for dname in [name, name / FS.course, name / FS.mod]:
         dname.mkdir()
         log.log(1, log.msgs["create"].format(name=dname))
     # Write files
@@ -74,8 +73,8 @@ def write_newcourse(name, tpls, verb):
 
 def addmod(name, verb):
     """Add a module with template files."""
-    cset = DirNames().course / "settings.yaml"
-    mpath = DirNames().mod / name
+    cset = FS.course / "settings.yaml"
+    mpath = FS.mod / name
     if cset.exists() and not mpath.exists():
         # Load course settings and get user input
         cset = util.load_yaml(cset)
@@ -93,11 +92,11 @@ def addmod(name, verb):
 
 def get_mod_tpls(name, user_input):
     # Get templates
-    tpl_names = get_template_paths(str(DirNames().mod))
+    tpl_names = get_template_paths(str(FS.mod))
     # Render templates and change output path in process
     rendered = {}
     for tpl in tpl_names:
-        outpath = DirNames().mod / name / pathlib.Path(tpl).name
+        outpath = FS.mod / name / pathlib.Path(tpl).name
         rendered[outpath] = render_template(tpl, user_input)
     return rendered
 
@@ -108,8 +107,8 @@ def write_mod(name, tpls, verb):
     log.log(1, log.msgs["addmod"].format(mod=name))
     # Make module directory
     log.log(1, log.msgs["create_dir"])
-    (DirNames().mod / name).mkdir()
-    log.log(1, log.msgs["create"].format(name=DirNames().mod / name))
+    (FS.mod / name).mkdir()
+    log.log(1, log.msgs["create"].format(name=FS.mod / name))
     # Write files
     log.log(1, log.msgs["create_files"])
     for tpl in tpls:
