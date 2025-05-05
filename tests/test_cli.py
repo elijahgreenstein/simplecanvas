@@ -259,13 +259,55 @@ class TestUpMod:
         return resp
 
     @pytest.fixture
-    def move_resp(self, auth):
+    def move_resp(self):
         move_json = [
             {"module_item": {"page_url": "P101"}},
             {"module_item": {"content_id": "Q102"}},
             {"module_item": {"content_id": "D103"}},
         ]
         return move_json
+
+    @pytest.fixture
+    def qq_url(self):
+        return "example/api/courses/987/quizzes/Q102/questions"
+
+    @pytest.fixture
+    def add_question_mc(self, auth, qq_url):
+        answers = [
+            {"answer_text": "Answer 1", "answer_weight": 100.0},
+            {"answer_text": "Answer 2", "answer_weight": 100.0},
+            {"answer_text": "Answer 3", "answer_weight": 0.0},
+            {"answer_text": "Answer 4", "answer_weight": 0.0},
+        ]
+        params = {
+            "question": {
+                "question_name": "Question",
+                "question_text": "What are the correct answers?",
+                "question_type": "multiple_answers_question",
+                "points_possible": 1,
+                "answers": answers,
+            }
+        }
+        return {"TEST": {"URL": qq_url, "-H": auth, "json": params}}
+
+    @pytest.fixture
+    def add_question_essay(self, auth, qq_url):
+        params = {
+            "question": {
+                "question_name": "Question",
+                "question_text": "Write about a test case.",
+                "question_type": "essay_question",
+                "points_possible": 1,
+            }
+        }
+        return {"TEST": {"URL": qq_url, "-H": auth, "json": params}}
+
+    @pytest.fixture
+    def update_question_pts(self, auth):
+        url = "example/api/courses/987/quizzes/Q102"
+        params = {"points_possible": 2}
+        return {"TEST": {"URL": url, "-H": auth, "json": params}}
+
 
     def test_upload_seq(
         self,
@@ -275,6 +317,9 @@ class TestUpMod:
         quiz_resp_ex,
         disc_resp_ex,
         move_resp,
+        add_question_mc,
+        add_question_essay,
+        update_question_pts,
         auth,
     ):
         # Give example id numbers to items
@@ -295,3 +340,6 @@ class TestUpMod:
             move = {"TEST": {"URL": url, "-H": auth, "json": move_resp[idx]}}
             res = resp["moves"][idx]
             assert move == res
+        assert add_question_mc == resp["quiz"][0][0]
+        assert add_question_essay == resp["quiz"][0][1]
+        assert update_question_pts == resp["quiz"][1]
