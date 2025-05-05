@@ -1,56 +1,48 @@
+import pathlib
+
 import yaml
 
-from pathlib import Path
-from simplecanvas.objects import (
-    User,
-    Course,
-    Module,
-    Page,
-    Discussion,
-    Quiz,
-    QuizQuestion,
-)
-from simplecanvas.util import md2html, get_meta, load_yaml
+from simplecanvas import objects, util
 
 
 def load_user(token_path):
     with open(token_path) as f:
-        user = User(f.read().strip())
+        user = objects.User(f.read().strip())
     return user
 
 
 def load_course(cset, qdesc=None):
-    settings = load_yaml(cset)
+    settings = util.load_yaml(cset)
     if qdesc:
         with open(qdesc) as f:
-            quiz_desc = md2html(f.read())
-        course = Course(settings, quiz_desc)
+            quiz_desc = util.md2html(f.read())
+        course = objects.Course(settings, quiz_desc)
     else:
-        course = Course(settings)
+        course = objects.Course(settings)
     return course
 
 
 def load_page(pagepath, course, md_tpl):
     with open(pagepath) as f:
         text = f.read()
-    title = get_meta(text, md_tpl)["title"]
-    body = md2html(text)
-    return Page(title, body)
+    title = util.get_meta(text, md_tpl)["title"]
+    body = util.md2html(text)
+    return objects.Page(title, body)
 
 
 def load_disc(discpath, course, md_tpl):
     with open(discpath) as f:
         text = f.read()
-    title = get_meta(text, md_tpl)["title"]
-    body = md2html(text)
-    return Discussion(title, body, course.disc)
+    title = util.get_meta(text, md_tpl)["title"]
+    body = util.md2html(text)
+    return objects.Discussion(title, body, course.disc)
 
 
 def load_quiz(quizpath, course, md_tpl):
-    quiz = load_yaml(quizpath)
+    quiz = util.load_yaml(quizpath)
     title = quiz["title"]
     if quiz["description"]:
-        body = md2html(quiz["description"])
+        body = util.md2html(quiz["description"])
     else:
         body = course.qdesc
     settings = course.quiz
@@ -60,9 +52,9 @@ def load_quiz(quizpath, course, md_tpl):
         qtext = qst["question"]
         qcor = qst["correct"] if "correct" in qst else []
         qinc = qst["incorrect"] if "incorrect" in qst else []
-        qq = QuizQuestion(qtext, qcor, qinc)
+        qq = objects.QuizQuestion(qtext, qcor, qinc)
         questions.append(qq)
-    return Quiz(title, body, settings, questions)
+    return objects.Quiz(title, body, settings, questions)
 
 
 def load_module(mod_dir, mset, course, md_tpl):
@@ -71,11 +63,11 @@ def load_module(mod_dir, mset, course, md_tpl):
         "quiz": load_quiz,
         "disc": load_disc,
     }
-    mdir = Path(mod_dir)
-    mset = load_yaml(mdir / mset)
+    mdir = pathlib.Path(mod_dir)
+    mset = util.load_yaml(mdir / mset)
     items = []
     for item in mset["item_order"]:
         load_func = func[item[1]]
         items.append(load_func(mdir / item[0], course, md_tpl))
-    mod = Module(mset["title"], mset["position"], mset["module_name"], items)
+    mod = objects.Module(mset["title"], mset["position"], mset["module_name"], items)
     return mod

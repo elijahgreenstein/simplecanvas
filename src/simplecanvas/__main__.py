@@ -1,8 +1,7 @@
 import argparse
-
 from pathlib import Path
 
-from .cli import newcourse, addmod, upmod
+from simplecanvas import cli
 
 
 def main():
@@ -25,16 +24,16 @@ def main():
     parser_newcourse = subparsers.add_parser(
         "newcourse", help="create new course"
     )
-    parser_newcourse.set_defaults(func=newcourse)
+    parser_newcourse.set_defaults(func=cli.newcourse)
     parser_addmod = subparsers.add_parser("addmod", help="add module to course")
-    parser_addmod.set_defaults(func=addmod)
+    parser_addmod.set_defaults(func=cli.addmod)
     parser_upmod = subparsers.add_parser(
         "upmod", help="upload module to Canvas"
     )
-    parser_upmod.set_defaults(func=upmod)
+    parser_upmod.set_defaults(func=cli.upmod)
     parser.add_argument("name", help="name of the course or module")
     args = parser.parse_args()
-    if args.func == upmod:
+    if args.func == cli.upmod:
         args.func(Path(args.name), pkgdir, args.verbose, args.test_run)
     else:
         args.func(Path(args.name), args.verbose)

@@ -1,7 +1,7 @@
-import requests
+import pathlib
+import urllib
 
-from pathlib import Path
-from urllib.parse import urlparse
+import requests
 
 
 class User:
@@ -74,8 +74,8 @@ class Course:
     def __init__(self, settings, qdesc=None):
         self.cname = settings["course"]["course_name"]
         self.uid = settings["course"]["course_id"]
-        self.url = urlparse(settings["course"]["course_url"])
-        self.path = Path(self.url.path) / "courses" / self.uid
+        self.url = urllib.parse.urlparse(settings["course"]["course_url"])
+        self.path = pathlib.Path(self.url.path) / "courses" / self.uid
         self.disc = settings["discussion"]
         self.quiz = settings["quiz"]
         self.qdesc = qdesc

@@ -1,14 +1,14 @@
 import json
+import pathlib
 import subprocess
-import yaml
 
-from pathlib import Path
+import yaml
 
 
 class FileStructure:
 
-    course = Path("_conf")
-    mod = Path("modules")
+    course = pathlib.Path("_conf")
+    mod = pathlib.Path("modules")
     cset = course / "settings.yaml"
     qdesc = course / "quiz-desc.md"
     token = course / "token"
@@ -16,7 +16,7 @@ class FileStructure:
     intro = "intro.md"
     quiz = "quiz.yaml"
     disc = "disc.md"
-    mdjson = Path("data") / "metadata.json"
+    mdjson = pathlib.Path("data") / "metadata.json"
 
     def get_mset(self, modname):
         return self.mod / modname / self.mset
@@ -34,8 +34,8 @@ class FileStructure:
 class DirNames:
 
     def __init__(self):
-        self.course = Path("_conf")
-        self.mod = Path("modules")
+        self.course = pathlib.Path("_conf")
+        self.mod = pathlib.Path("modules")
 
 
 class UserInput:
