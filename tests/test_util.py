@@ -1,9 +1,10 @@
+import pathlib
+
 import pytest
 
-from pathlib import Path
 from simplecanvas import util
 
-DATADIR = Path(__file__).parent / "data"
+DATADIR = pathlib.Path(__file__).parent / "data"
 
 
 @pytest.fixture

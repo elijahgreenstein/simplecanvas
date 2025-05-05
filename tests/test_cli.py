@@ -1,11 +1,12 @@
+import pathlib
+
 import pytest
 
-from pathlib import Path
 from simplecanvas import cli, util, objects
 
 
 FS = util.FileStructure()
-DATADIR = Path(__file__).parent / "data"
+DATADIR = pathlib.Path(__file__).parent / "data"
 TEST101 = DATADIR / "TEST101"
 
 
@@ -157,8 +158,8 @@ class TestAddMod:
     def test_get_mod_tpls(self, mod_name, user_input_mod):
         check = {}
         for tpl in test_tpl_render_mod:
-            original = Path(tpl[0])
-            newpath = Path("modules") / mod_name / original.name
+            original = pathlib.Path(tpl[0])
+            newpath = pathlib.Path("modules") / mod_name / original.name
             check[newpath] = tpl[1]
         res = cli.get_mod_tpls(mod_name, user_input_mod)
         assert check == res
