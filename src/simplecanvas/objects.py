@@ -33,6 +33,27 @@ class User:
             resp = requests.post(url, headers=self.auth, json=params)
             return {"RESPONSE": resp}
 
+    def add_quiz_questions(self, course, quiz, test=False):
+        path = course.path / quiz.path / quiz.uid / "questions"
+        url = course.url._replace(path=str(path)).geturl()
+        resps = []
+        for question in quiz.questions:
+            params = question.get_json()
+            if test:
+                resp = {"TEST": {"URL": url, "-H": self.auth, "json": params}}
+                resps.append(resp)
+            else:
+                resp = requests.post(url, headers=self.auth, json=params)
+                resp.append(resp)
+        return resps
+
+    def update_quiz_pts(self, course, quiz, test=False):
+        path = course.path / quiz.path / quiz.uid
+        url = course.url._replace(path=str(path)).geturl()
+        params = {"points_possible": len(quiz.questions)}
+        if test:
+            return {"TEST": {"URL": url, "-H": self.auth, "json": params}}
+
 
 class Course:
 
