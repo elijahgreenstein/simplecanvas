@@ -322,13 +322,6 @@ class TestUpMod:
         update_question_pts,
         auth,
     ):
-        # Give example id numbers to items
-        #user.courses["TEST101"].modules["W01"].set_id("MOD123")
-        #id_examples = ["P101", "Q102", "D103"]
-        #for idx in range(len(id_examples)):
-        #    uid = id_examples[idx]
-        #    user.courses["TEST101"].modules["W01"].items[idx].set_id(uid)
-        #assert user.courses["TEST101"].modules["W01"].items[0].uid == "TESTID"
         resp = cli.upload_seq(user, mod_name, 0, test=True)
         assert "TEST" in resp["module"]
         assert mod_resp_example == resp["module"]
