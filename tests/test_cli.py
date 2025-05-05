@@ -184,11 +184,9 @@ class TestUpMod:
             assert type(res_items[idx] == type_check[idx])
             assert res_items[idx].title == title_check[idx]
 
-
     @pytest.fixture
     def auth(self):
         return {"Authorization": "Bearer 12345ABCDE"}
-
 
     @pytest.fixture
     def mod_resp_example(self, auth):
@@ -201,13 +199,28 @@ class TestUpMod:
                         "name": "A test module",
                         "position": 3,
                     }
-                }
+                },
             }
         }
         return resp
 
+    @pytest.fixture
+    def page_resp_ex(self, auth):
+        resp = {
+            "TEST": {
+                "URL": "example/api/courses/987/pages",
+                "-H": auth,
+                "json": {
+                    "wiki_page": {
+                        "title": "1.1. Introduction",
+                        "body": '<h2 id="overview">Overview</h2>\n<p>This is a test module.</p>\n',
+                    }
+                },
+            }
+        }
+        return resp
 
-    def test_upload_seq(self, user, mod_resp_example):
+    def test_upload_seq(self, user, mod_resp_example, page_resp_ex):
         # Give example id numbers to items
         user.courses["TEST101"].modules["W01"].set_id("MOD123")
         id_examples = ["P101", "Q102", "D103"]
@@ -218,3 +231,4 @@ class TestUpMod:
         resp = cli.upload_seq(user, mod_name, 0, test=True)
         assert "TEST" in resp["module_response"]
         assert mod_resp_example == resp["module_response"]
+        assert page_resp_ex == resp["item_responses"][0]
