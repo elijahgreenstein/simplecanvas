@@ -242,8 +242,24 @@ class TestUpMod:
         }
         return resp
 
+    @pytest.fixture
+    def disc_resp_ex(self, auth):
+        resp = {
+            "TEST": {
+                "URL": "example/api/courses/987/discussion_topics",
+                "-H": auth,
+                "json": {
+                    "title": "1.3. Discussion",
+                    "message": '<h2 id="overview">Overview</h2>\n<p>A test discussion.</p>\n<h2 id="to-do">To-Do</h2>\n<ul>\n<li>Item 1</li>\n<li>Item 2</li>\n</ul>\n',
+                    "discussion_type": "threaded",
+                    "published": False,
+                },
+            }
+        }
+        return resp
+
     def test_upload_seq(
-        self, user, mod_resp_example, page_resp_ex, quiz_resp_ex
+        self, user, mod_resp_example, page_resp_ex, quiz_resp_ex, disc_resp_ex
     ):
         # Give example id numbers to items
         user.courses["TEST101"].modules["W01"].set_id("MOD123")
@@ -257,3 +273,4 @@ class TestUpMod:
         assert mod_resp_example == resp["module_response"]
         assert page_resp_ex == resp["item_responses"][0]
         assert quiz_resp_ex == resp["item_responses"][1]
+        assert disc_resp_ex == resp["item_responses"][2]
