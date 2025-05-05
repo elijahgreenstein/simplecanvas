@@ -69,8 +69,12 @@ class Logger:
             "create_files": "- Creating files from templates:",
             "create": "    - {name}",
             "upmod_mod": "- Posting module ...",
+            "upmod_item": "- Posting item '{item}' ...",
+            "upmod_move": "- Moving item '{item}' ...",
             "status": "    - Status: {status}",
             "details": "    - Details: {resp}",
+            "upmod_add_qst": "- Adding question to '{item}' ...",
+            "upmod_update_pts": "- Updating points for '{item}' ...",
         }
 
     def log(self, level, message):

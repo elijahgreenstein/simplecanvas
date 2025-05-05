@@ -177,6 +177,7 @@ def upload_seq(user, name, verb, test):
     # Create items
     item_resp = []
     for item in module.items:
+        log.log(1, log.msgs["upmod_item"].format(item=item.title))
         resp = user.create(course, item, test)
         item_resp.append(resp)
         if not test:
@@ -186,6 +187,7 @@ def upload_seq(user, name, verb, test):
     # Move items to module
     move_resp = []
     for item in module.items:
+        log.log(1, log.msgs["upmod_move"].format(item=item.title))
         resp = user.move(course, module, item, test)
         move_resp.append(resp)
         if not test:
@@ -196,8 +198,21 @@ def upload_seq(user, name, verb, test):
     quiz_resp = []
     for item in module.items:
         if type(item) == Quiz:
-            quiz_resp.append(user.add_quiz_questions(course, item, test))
-            quiz_resp.append(user.update_quiz_pts(course, item, test))
+            log.log(1, log.msgs["upmod_add_qst"].format(item=item.title))
+            resps = user.add_quiz_questions(course, item, test)
+            if not test:
+                for resp in resps:
+                    status = resp["RESPONSE"].status_code
+                    log.log(1, log.msgs["status"].format(status=status))
+                    log.log(2, log.msgs["details"].format(resp=resp))
+            quiz_resp.append(resps)
+            log.log(1, log.msgs["upmod_update_pts"].format(item=item.title))
+            resp = user.update_quiz_pts(course, item, test)
+            if not test:
+                status = resp["RESPONSE"].status_code
+                log.log(1, log.msgs["status"].format(status=status))
+                log.log(2, log.msgs["details"].format(resp=resp))
+            quiz_resp.append(resp)
 
     # Return responses
     return {
