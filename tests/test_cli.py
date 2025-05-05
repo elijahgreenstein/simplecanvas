@@ -258,8 +258,24 @@ class TestUpMod:
         }
         return resp
 
+    @pytest.fixture
+    def move_resp(self, auth):
+        move_json = [
+            {"module_item": {"page_url": "P101"}},
+            {"module_item": {"content_id": "Q102"}},
+            {"module_item": {"content_id": "D103"}},
+        ]
+        return move_json
+
     def test_upload_seq(
-        self, user, mod_resp_example, page_resp_ex, quiz_resp_ex, disc_resp_ex
+        self,
+        user,
+        mod_resp_example,
+        page_resp_ex,
+        quiz_resp_ex,
+        disc_resp_ex,
+        move_resp,
+        auth,
     ):
         # Give example id numbers to items
         user.courses["TEST101"].modules["W01"].set_id("MOD123")
@@ -269,8 +285,13 @@ class TestUpMod:
             user.courses["TEST101"].modules["W01"].items[idx].set_id(uid)
         assert user.courses["TEST101"].modules["W01"].items[0].uid == "P101"
         resp = cli.upload_seq(user, mod_name, 0, test=True)
-        assert "TEST" in resp["module_response"]
-        assert mod_resp_example == resp["module_response"]
-        assert page_resp_ex == resp["item_responses"][0]
-        assert quiz_resp_ex == resp["item_responses"][1]
-        assert disc_resp_ex == resp["item_responses"][2]
+        assert "TEST" in resp["module"]
+        assert mod_resp_example == resp["module"]
+        assert page_resp_ex == resp["items"][0]
+        assert quiz_resp_ex == resp["items"][1]
+        assert disc_resp_ex == resp["items"][2]
+        url = "example/api/courses/987/modules/MOD123/items"
+        for idx in range(len(resp["moves"])):
+            move = {"TEST": {"URL": url, "-H": auth, "json": move_resp[idx]}}
+            res = resp["moves"][idx]
+            assert move == res
