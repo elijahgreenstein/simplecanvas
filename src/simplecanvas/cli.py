@@ -137,8 +137,10 @@ def upmod(name, pkgdir, verb, test):
         # Print test results
         if test:
             print("TEST COMPLETE:")
-            pprint(results["module_response"])
-            for item in results["item_responses"]:
+            pprint(results["module"])
+            for item in results["items"]:
+                pprint(item)
+            for item in results["moves"]:
                 pprint(item)
     elif not mpath.exists():
         raise FileNotFoundError(f"'{name}' does not exist.")
@@ -172,17 +174,24 @@ def upload_seq(user, name, verb, test):
         log.log(1, log.msgs["status"].format(mod_resp["RESPONSE"].status_code))
         log.log(2, log.msgs["details"].format(resp=mod_resp))
     # Create items
-    items_resp = []
+    item_resp = []
     for item in module.items:
         resp = user.create(course, item, test)
-        items_resp.append(resp)
+        item_resp.append(resp)
         if not test:
-            status = mod_resp["RESPONSE"].status_code
+            status = resp["RESPONSE"].status_code
             log.log(1, log.msgs["status"].format(status=status))
             log.log(2, log.msgs["details"].format(resp=resp))
     # Move items to module
-
+    move_resp = []
+    for item in module.items:
+        resp = user.move(course, module, item, test)
+        move_resp.append(resp)
+        if not test:
+            status = resp["RESPONSE"].status_code
+            log.log(1, log.msgs["status"].format(status=status))
+            log.log(2, log.msgs["details"].format(resp=resp))
     # Handle quizzes
 
     # Return responses
-    return {"module_response": mod_resp, "item_responses": items_resp}
+    return {"module": mod_resp, "items": item_resp, "moves": move_resp}

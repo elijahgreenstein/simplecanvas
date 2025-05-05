@@ -23,6 +23,16 @@ class User:
             item.set_id(resp.json()[item.id_name])
             return {"RESPONSE": resp}
 
+    def move(self, course, module, item, test=False):
+        path = course.path / module.path / module.uid / "items"
+        url = course.url._replace(path=str(path)).geturl()
+        params = {"module_item": {item.content_name: item.uid}}
+        if test:
+            return {"TEST": {"URL": url, "-H": self.auth, "json": params}}
+        else:
+            resp = requests.post(url, headers=self.auth, json=params)
+            return {"RESPONSE": resp}
+
 
 class Course:
 
