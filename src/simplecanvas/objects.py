@@ -180,4 +180,4 @@ class QuizQuestion:
             res["answers"] = answers
         else:
             pass
-        return res
+        return {"question": res}
