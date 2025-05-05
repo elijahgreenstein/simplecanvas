@@ -1,25 +1,18 @@
-import shutil
+import pathlib
+import pprint
 
-from jinja2 import Environment, PackageLoader, select_autoescape
-from pathlib import Path
-from pprint import pprint
-from simplecanvas.util import (
-    UserInput,
-    Logger,
-    DirNames,
-    load_yaml,
-    FileStructure,
-)
-from simplecanvas import loaders
-from simplecanvas.objects import Quiz
+import jinja2
+
+from simplecanvas import loaders, objects, util
+from simplecanvas.util import DirNames
 
 
-FS = FileStructure()
+FS = util.FileStructure()
 
 
 def get_env():
-    return Environment(
-        loader=PackageLoader("simplecanvas"), autoescape=select_autoescape
+    return jinja2.Environment(
+        loader=jinja2.PackageLoader("simplecanvas"), autoescape=jinja2.select_autoescape
     )
 
 
@@ -46,7 +39,7 @@ def newcourse(name, verb):
     if name.exists():
         raise FileExistsError(f"'{name}' already exists.")
     else:
-        user_prompts = UserInput()
+        user_prompts = util.UserInput()
         user_input = get_user_input(user_prompts.course)
         tpls = get_newcourse(user_input)
         write_newcourse(name, tpls, verb)
@@ -64,7 +57,7 @@ def get_newcourse(user_input):
 
 def write_newcourse(name, tpls, verb):
     # Set up logger
-    log = Logger(verb)
+    log = util.Logger(verb)
     log.log(1, log.msgs["newcourse"].format(course=name))
     # Make directories
     log.log(1, log.msgs["create_dir"])
@@ -85,8 +78,8 @@ def addmod(name, verb):
     mpath = DirNames().mod / name
     if cset.exists() and not mpath.exists():
         # Load course settings and get user input
-        cset = load_yaml(cset)
-        user_input = get_user_input(UserInput().mod)
+        cset = util.load_yaml(cset)
+        user_input = get_user_input(util.UserInput().mod)
         # Update user input with times from course settings
         user_input.update(cset["times"])
         # Get templates and write
@@ -104,14 +97,14 @@ def get_mod_tpls(name, user_input):
     # Render templates and change output path in process
     rendered = {}
     for tpl in tpl_names:
-        outpath = DirNames().mod / name / Path(tpl).name
+        outpath = DirNames().mod / name / pathlib.Path(tpl).name
         rendered[outpath] = render_template(tpl, user_input)
     return rendered
 
 
 def write_mod(name, tpls, verb):
     # Set up logger
-    log = Logger(verb)
+    log = util.Logger(verb)
     log.log(1, log.msgs["addmod"].format(mod=name))
     # Make module directory
     log.log(1, log.msgs["create_dir"])
@@ -132,17 +125,17 @@ def upmod(name, pkgdir, verb, test):
     mdjson = pkgdir / FS.mdjson
     if cset.exists() and mpath.exists():
         # Load module
-        user = load_mod(Path("./"), mpath, pkgdir / FS.mdjson)
+        user = load_mod(pathlib.Path("./"), mpath, pkgdir / FS.mdjson)
         # Run the upload sequence
         results = upload_seq(user, name, verb, test)
         # Print test results
         if test:
             print("TEST COMPLETE:")
-            pprint(results["module"])
+            pprint.pprint(results["module"])
             for item in results["items"]:
-                pprint(item)
+                pprint.pprint(item)
             for item in results["moves"]:
-                pprint(item)
+                pprint.pprint(item)
     elif not mpath.exists():
         raise FileNotFoundError(f"'{name}' does not exist.")
     else:
@@ -163,7 +156,7 @@ def load_mod(cpath, mpath, mdjson):
 
 def upload_seq(user, name, verb, test):
     # Set up logger for verbose output
-    log = Logger(verb)
+    log = util.Logger(verb)
     log.log(1, log.msgs["upmod"].format(mod=name))
     # Get the course
     course = [crs for crs in user.courses.values()][0]
@@ -200,7 +193,7 @@ def upload_seq(user, name, verb, test):
     # Handle quizzes
     quiz_resp = []
     for item in module.items:
-        if type(item) == Quiz:
+        if type(item) == objects.Quiz:
             log.log(1, log.msgs["upmod_add_qst"].format(item=item.title))
             resps = user.add_quiz_questions(course, item, test)
             if not test:
