@@ -261,9 +261,9 @@ class TestUpMod:
     @pytest.fixture
     def move_resp(self):
         move_json = [
-            {"module_item": {"page_url": "TEST_ID"}},
-            {"module_item": {"content_id": "TEST_ID"}},
-            {"module_item": {"content_id": "TEST_ID"}},
+            {"module_item": {"page_url": "TEST_ID", "type": "Page", "position": 1,}},
+            {"module_item": {"content_id": "TEST_ID", "type": "Quiz", "position": 2,}},
+            {"module_item": {"content_id": "TEST_ID", "type": "Discussion", "position": 3,}},
         ]
         return move_json
 
@@ -305,7 +305,7 @@ class TestUpMod:
     @pytest.fixture
     def update_question_pts(self, auth):
         url = "example/api/courses/987/quizzes/TEST_ID"
-        params = {"points_possible": 2}
+        params = {"quiz": {"points_possible": 2}}
         return {"TEST": {"URL": url, "-H": auth, "json": params}}
 
 
