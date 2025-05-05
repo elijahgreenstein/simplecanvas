@@ -1,7 +1,7 @@
 import pytest
 
 from pathlib import Path
-from simplecanvas import cli, util
+from simplecanvas import cli, util, objects
 
 
 FS = util.FileStructure()
@@ -169,3 +169,13 @@ class TestUpMod:
         modpath = TEST101 / FS.mod / mod_name
         user = cli.load_mod(TEST101, modpath, mdjson)
         assert user.token == "12345ABCDE"
+        assert "TEST101" in user.courses
+        assert user.courses["TEST101"].uid == "987"
+        assert "W01" in user.courses["TEST101"].modules
+        assert user.courses["TEST101"].modules["W01"].title == "A test module"
+        res_items = user.courses["TEST101"].modules["W01"].items
+        type_check = [objects.Page, objects.Quiz, objects.Discussion]
+        title_check = ["1.1. Introduction", "1.2. Quiz", "1.3. Discussion"]
+        for idx in range(len(res_items)):
+            assert type(res_items[idx] == type_check[idx])
+            assert res_items[idx].title == title_check[idx]
