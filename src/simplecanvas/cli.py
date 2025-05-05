@@ -11,7 +11,8 @@ FS = util.FileStructure()
 
 def get_env():
     return jinja2.Environment(
-        loader=jinja2.PackageLoader("simplecanvas"), autoescape=jinja2.select_autoescape
+        loader=jinja2.PackageLoader("simplecanvas"),
+        autoescape=jinja2.select_autoescape,
     )
 
 
