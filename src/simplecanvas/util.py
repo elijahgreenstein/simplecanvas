@@ -64,7 +64,7 @@ class Logger:
         self.msgs = {
             "newcourse": "Creating new course: '{course}'",
             "addmod": "Adding a module: '{mod}'",
-            "updmod": "Uploading module: '{mod}'",
+            "upmod": "Uploading module: '{mod}'",
             "create_dir": "- Creating directories:",
             "create_files": "- Creating files from templates:",
             "create": "    - {name}",

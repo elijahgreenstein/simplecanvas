@@ -133,7 +133,13 @@ def upmod(name, pkgdir, verb, test):
         # Load module
         user = load_mod(Path("./"), mpath, pkgdir / FS.mdjson)
         # Run the upload sequence
-        upload_seq(user, name, verb, test)
+        results = upload_seq(user, name, verb, test)
+        # Print test results
+        if test:
+            print("TEST COMPLETE:")
+            pprint(results["module_response"])
+            for item in results["item_responses"]:
+                pprint(item)
     elif not mpath.exists():
         raise FileNotFoundError(f"'{name}' does not exist.")
     else:
@@ -173,14 +179,10 @@ def upload_seq(user, name, verb, test):
         if not test:
             status = mod_resp["RESPONSE"].status_code
             log.log(1, log.msgs["status"].format(status=status))
-            log.log(2, log.msgs["details"].format(resp=resp)
+            log.log(2, log.msgs["details"].format(resp=resp))
     # Move items to module
-    
+
     # Handle quizzes
 
-    # Print test results
-    if test:
-        print("TEST COMPLETE:")
-        pprint(mod_resp)
-        for item in items_resp:
-            pprint(item)
+    # Return responses
+    return {"module_response": mod_resp, "item_responses": items_resp}
