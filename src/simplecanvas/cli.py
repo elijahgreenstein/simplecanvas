@@ -2,6 +2,7 @@ import shutil
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
+from pprint import pprint
 from simplecanvas.util import (
     UserInput,
     Logger,
@@ -131,6 +132,8 @@ def upmod(name, pkgdir, verb, test):
     if cset.exists() and mpath.exists():
         # Load module
         user = load_mod(Path("./"), mpath, pkgdir / FS.mdjson)
+        # Run the upload sequence
+        upload_seq(user, name, verb, test)
     elif not mpath.exists():
         raise FileNotFoundError(f"'{name}' does not exist.")
     else:
@@ -147,3 +150,23 @@ def load_mod(cpath, mpath, mdjson):
     course.add_mod(mod)
     user.add_course(course)
     return user
+
+
+def upload_seq(user, name, verb, test):
+    # Get the course
+    course = [crs for crs in user.courses.values()][0]
+    module = [mod for mod in course.modules.values()][0]
+    # Create module
+    mod_resp = user.create(course, module, test)
+    items_resp = []
+    # Create items
+    for item in module.items:
+        resp = user.create(course, item, test)
+        items_resp.append(resp)
+    # Move items to Canvas
+    # Handle quizzes
+    if test:
+        print("TEST COMPLETE:")
+        pprint(mod_resp)
+        for item in items_resp:
+            pprint(item)
