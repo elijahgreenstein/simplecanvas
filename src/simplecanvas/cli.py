@@ -172,7 +172,8 @@ def upload_seq(user, name, verb, test):
     log.log(1, log.msgs["upmod_mod"])
     mod_resp = user.create(course, module, test)
     if not test:
-        log.log(1, log.msgs["status"].format(mod_resp["RESPONSE"].status_code))
+        status = mod_resp["RESPONSE"].status_code
+        log.log(1, log.msgs["status"].format(status=status))
         log.log(2, log.msgs["details"].format(resp=mod_resp))
     # Create items
     item_resp = []
