@@ -220,7 +220,31 @@ class TestUpMod:
         }
         return resp
 
-    def test_upload_seq(self, user, mod_resp_example, page_resp_ex):
+    @pytest.fixture
+    def quiz_resp_ex(self, auth):
+        resp = {
+            "TEST": {
+                "URL": "example/api/courses/987/quizzes",
+                "-H": auth,
+                "json": {
+                    "quiz": {
+                        "title": "1.2. Quiz",
+                        "description": '<h2 id="overview">Overview</h2>\n<p>A modified quiz description for the test module.</p>\n',
+                        "shuffle_answers": True,
+                        "hide_results": "always",
+                        "quiz_type": "assignment",
+                        "unlock_at": "2025-05-01T12:00:00Z",
+                        "due_at": "2025-05-01T13:00:00Z",
+                        "lock_at": "2025-05-01T14:00:00Z",
+                    },
+                },
+            }
+        }
+        return resp
+
+    def test_upload_seq(
+        self, user, mod_resp_example, page_resp_ex, quiz_resp_ex
+    ):
         # Give example id numbers to items
         user.courses["TEST101"].modules["W01"].set_id("MOD123")
         id_examples = ["P101", "Q102", "D103"]
@@ -232,3 +256,4 @@ class TestUpMod:
         assert "TEST" in resp["module_response"]
         assert mod_resp_example == resp["module_response"]
         assert page_resp_ex == resp["item_responses"][0]
+        assert quiz_resp_ex == resp["item_responses"][1]
