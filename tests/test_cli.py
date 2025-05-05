@@ -165,9 +165,13 @@ class TestAddMod:
 
 
 class TestUpMod:
-    def test_load_mod(self, mod_name, mdjson):
+
+    @pytest.fixture
+    def user(self, mod_name, mdjson):
         modpath = TEST101 / FS.mod / mod_name
-        user = cli.load_mod(TEST101, modpath, mdjson)
+        return cli.load_mod(TEST101, modpath, mdjson)
+
+    def test_load_mod(self, user):
         assert user.token == "12345ABCDE"
         assert "TEST101" in user.courses
         assert user.courses["TEST101"].uid == "987"
