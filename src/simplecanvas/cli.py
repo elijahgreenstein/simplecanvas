@@ -153,18 +153,32 @@ def load_mod(cpath, mpath, mdjson):
 
 
 def upload_seq(user, name, verb, test):
+    # Set up logger for verbose output
+    log = Logger(verb)
+    log.log(1, log.msgs["upmod"].format(mod=name))
     # Get the course
     course = [crs for crs in user.courses.values()][0]
     module = [mod for mod in course.modules.values()][0]
     # Create module
+    log.log(1, log.msgs["upmod_mod"])
     mod_resp = user.create(course, module, test)
-    items_resp = []
+    if not test:
+        log.log(1, log.msgs["status"].format(mod_resp["RESPONSE"].status_code))
+        log.log(2, log.msgs["details"].format(resp=mod_resp))
     # Create items
+    items_resp = []
     for item in module.items:
         resp = user.create(course, item, test)
         items_resp.append(resp)
-    # Move items to Canvas
+        if not test:
+            status = mod_resp["RESPONSE"].status_code
+            log.log(1, log.msgs["status"].format(status=status))
+            log.log(2, log.msgs["details"].format(resp=resp)
+    # Move items to module
+    
     # Handle quizzes
+
+    # Print test results
     if test:
         print("TEST COMPLETE:")
         pprint(mod_resp)
