@@ -1,3 +1,5 @@
+import requests
+
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -20,22 +22,23 @@ class User:
             item.set_id("TEST_ID")
             return {"TEST": {"URL": url, "-H": self.auth, "json": iset}}
         else:
-            resp = requests.post(url, headers=self.auth, json=settings)
+            resp = requests.post(url, headers=self.auth, json=iset)
             item.set_id(resp.json()[item.id_name])
-            return {"RESPONSE": resp}
+            return {"RESPONSE": resp.json()}
 
     def move(self, course, module, item, test=False):
-        path = course.path / module.path / module.uid / "items"
+        path = course.path / module.path / str(module.uid) / "items"
         url = course.url._replace(path=str(path)).geturl()
         params = {"module_item": {item.content_name: item.uid}}
+        print(params)
         if test:
             return {"TEST": {"URL": url, "-H": self.auth, "json": params}}
         else:
             resp = requests.post(url, headers=self.auth, json=params)
-            return {"RESPONSE": resp}
+            return {"RESPONSE": resp.json()}
 
     def add_quiz_questions(self, course, quiz, test=False):
-        path = course.path / quiz.path / quiz.uid / "questions"
+        path = course.path / quiz.path / str(quiz.uid) / "questions"
         url = course.url._replace(path=str(path)).geturl()
         resps = []
         for question in quiz.questions:
@@ -45,7 +48,7 @@ class User:
                 resps.append(resp)
             else:
                 resp = requests.post(url, headers=self.auth, json=params)
-                resp.append(resp)
+                resps.append(resp.json())
         return resps
 
     def update_quiz_pts(self, course, quiz, test=False):
@@ -54,6 +57,9 @@ class User:
         params = {"points_possible": len(quiz.questions)}
         if test:
             return {"TEST": {"URL": url, "-H": self.auth, "json": params}}
+        else:
+            resp = requests.post(url, headers=self.auth, json=params)
+            return resp.json()
 
 
 class Course:
