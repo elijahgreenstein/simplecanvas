@@ -11,6 +11,7 @@ from simplecanvas.util import (
     FileStructure,
 )
 from simplecanvas import loaders
+from simplecanvas.objects import Quiz
 
 
 FS = FileStructure()
@@ -192,6 +193,16 @@ def upload_seq(user, name, verb, test):
             log.log(1, log.msgs["status"].format(status=status))
             log.log(2, log.msgs["details"].format(resp=resp))
     # Handle quizzes
+    quiz_resp = []
+    for item in module.items:
+        if type(item) == Quiz:
+            quiz_resp.append(user.add_quiz_questions(course, item, test))
+            quiz_resp.append(user.update_quiz_pts(course, item, test))
 
     # Return responses
-    return {"module": mod_resp, "items": item_resp, "moves": move_resp}
+    return {
+        "module": mod_resp,
+        "items": item_resp,
+        "moves": move_resp,
+        "quiz": quiz_resp,
+    }
