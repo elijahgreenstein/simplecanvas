@@ -138,10 +138,9 @@ def upmod(name, pkgdir, verb):
 
 
 def load_mod(cpath, mpath, mdjson):
-    cset = cpath / FS.course / FS.cset.name
-    token = cpath / FS.course / FS.token.name
-    qdesc_path = cpath / FS.course / FS.qdesc.name
-    user = loaders.load_user(token)
+    cset = cpath / FS.cset
+    qdesc_path = cpath / FS.qdesc
+    user = loaders.load_user(cpath / FS.token)
     qdesc = qdesc_path if qdesc_path.exists() else None
     course = loaders.load_course(cset, qdesc)
     mod = loaders.load_module(mpath, FS.mset, course, mdjson)
