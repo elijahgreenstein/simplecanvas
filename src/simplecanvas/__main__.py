@@ -18,7 +18,9 @@ def main():
         action="count",
         default=0,
     )
-    parser.add_argument("-t", "--test-run", help="test the command", action="store_true")
+    parser.add_argument(
+        "-t", "--test-run", help="test the command", action="store_true"
+    )
     subparsers = parser.add_subparsers(required=True)
     parser_newcourse = subparsers.add_parser(
         "newcourse", help="create new course"
