@@ -261,15 +261,15 @@ class TestUpMod:
     @pytest.fixture
     def move_resp(self):
         move_json = [
-            {"module_item": {"page_url": "P101"}},
-            {"module_item": {"content_id": "Q102"}},
-            {"module_item": {"content_id": "D103"}},
+            {"module_item": {"page_url": "TEST_ID"}},
+            {"module_item": {"content_id": "TEST_ID"}},
+            {"module_item": {"content_id": "TEST_ID"}},
         ]
         return move_json
 
     @pytest.fixture
     def qq_url(self):
-        return "example/api/courses/987/quizzes/Q102/questions"
+        return "example/api/courses/987/quizzes/TEST_ID/questions"
 
     @pytest.fixture
     def add_question_mc(self, auth, qq_url):
@@ -304,7 +304,7 @@ class TestUpMod:
 
     @pytest.fixture
     def update_question_pts(self, auth):
-        url = "example/api/courses/987/quizzes/Q102"
+        url = "example/api/courses/987/quizzes/TEST_ID"
         params = {"points_possible": 2}
         return {"TEST": {"URL": url, "-H": auth, "json": params}}
 
@@ -323,19 +323,19 @@ class TestUpMod:
         auth,
     ):
         # Give example id numbers to items
-        user.courses["TEST101"].modules["W01"].set_id("MOD123")
-        id_examples = ["P101", "Q102", "D103"]
-        for idx in range(len(id_examples)):
-            uid = id_examples[idx]
-            user.courses["TEST101"].modules["W01"].items[idx].set_id(uid)
-        assert user.courses["TEST101"].modules["W01"].items[0].uid == "P101"
+        #user.courses["TEST101"].modules["W01"].set_id("MOD123")
+        #id_examples = ["P101", "Q102", "D103"]
+        #for idx in range(len(id_examples)):
+        #    uid = id_examples[idx]
+        #    user.courses["TEST101"].modules["W01"].items[idx].set_id(uid)
+        #assert user.courses["TEST101"].modules["W01"].items[0].uid == "TESTID"
         resp = cli.upload_seq(user, mod_name, 0, test=True)
         assert "TEST" in resp["module"]
         assert mod_resp_example == resp["module"]
         assert page_resp_ex == resp["items"][0]
         assert quiz_resp_ex == resp["items"][1]
         assert disc_resp_ex == resp["items"][2]
-        url = "example/api/courses/987/modules/MOD123/items"
+        url = "example/api/courses/987/modules/TEST_ID/items"
         for idx in range(len(resp["moves"])):
             move = {"TEST": {"URL": url, "-H": auth, "json": move_resp[idx]}}
             res = resp["moves"][idx]

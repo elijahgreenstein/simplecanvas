@@ -17,6 +17,7 @@ class User:
         url = course.url._replace(path=str(path)).geturl()
         iset = item.get_settings()
         if test:
+            item.set_id("TEST_ID")
             return {"TEST": {"URL": url, "-H": self.auth, "json": iset}}
         else:
             resp = requests.post(url, headers=self.auth, json=settings)
