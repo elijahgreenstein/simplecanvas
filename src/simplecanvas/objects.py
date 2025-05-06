@@ -105,6 +105,10 @@ class Module:
 
 class Item:
 
+    settings = None
+    body_name = None
+    param = None
+
     def __init__(self, title, body):
         self.title = title
         self.body = body
@@ -128,7 +132,6 @@ class Page(Item):
     param = "wiki_page"
     id_name = "url"
     content_name = "page_url"
-    settings = None
 
     def __init__(self, title, body):
         super().__init__(title, body)
@@ -139,7 +142,6 @@ class Discussion(Item):
     itype = "Discussion"
     path = "discussion_topics"
     body_name = "message"
-    param = None
     id_name = "id"
     content_name = "content_id"
 
