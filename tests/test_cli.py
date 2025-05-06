@@ -168,11 +168,12 @@ class TestAddMod:
 class TestUpMod:
 
     @pytest.fixture
-    def user(self, mod_name, mdjson):
+    def user_course_mod(self, mod_name, mdjson):
         modpath = TEST101 / FS.mod / mod_name
         return cli.load_mod(TEST101, modpath, mdjson)
 
-    def test_load_mod(self, user):
+    def test_load_mod(self, user_course_mod):
+        user = user_course_mod[0]
         assert user.token == "12345ABCDE"
         assert "TEST101" in user.courses
         assert user.courses["TEST101"].uid == "987"
@@ -329,7 +330,7 @@ class TestUpMod:
 
     def test_upload_seq(
         self,
-        user,
+        user_course_mod,
         mod_resp_example,
         page_resp_ex,
         quiz_resp_ex,
@@ -340,7 +341,8 @@ class TestUpMod:
         update_question_pts,
         auth,
     ):
-        resp = cli.upload_seq(user, mod_name, 0, test=True)
+        user, course, mod = user_course_mod
+        resp = cli.upload_seq(user, course, mod, 0, test=True)
         assert "TEST" in resp["module"]
         assert mod_resp_example == resp["module"]
         assert page_resp_ex == resp["items"][0]

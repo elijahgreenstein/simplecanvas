@@ -133,9 +133,9 @@ def upmod(name, pkgdir, verb, test):
     mpath = FS.mod / name
     if cset.exists() and mpath.exists():
         # Load user, course, and module
-        user = load_mod(pathlib.Path("./"), mpath, pkgdir / FS.mdjson)
+        user, crs, mod = load_mod(pathlib.Path("./"), mpath, pkgdir / FS.mdjson)
         # Run the upload sequence
-        results = upload_seq(user, name, verb, test)
+        results = upload_seq(user, crs, mod, verb, test)
         # Print test results
         if test:
             print("TEST COMPLETE:")
@@ -160,17 +160,14 @@ def load_mod(cpath, mpath, mdjson):
     mod = loaders.load_module(mpath, FS.mset, course, mdjson)
     course.add_mod(mod)
     user.add_course(course)
-    return user
+    return (user, course, mod)
 
 
-def upload_seq(user, name, verb, test):
+def upload_seq(user, course, module, verb, test):
     """Create Module and upload its content."""
     # Set up logger for verbose output
     log = util.Logger(verb)
-    log.log(1, log.msgs["upmod"].format(mod=name))
-    # Get the course
-    course = user.courses.values()[0]
-    module = course.modules.values()[0]
+    log.log(1, log.msgs["upmod"].format(mod=module.mname))
     # Create module
     log.log(1, log.msgs["upmod_mod"])
     mod_resp = user.create(course, module, test)
@@ -202,7 +199,7 @@ def upload_seq(user, name, verb, test):
     # Handle quizzes
     quiz_resp = []
     for item in module.items:
-        if isinstance(item) == objects.Quiz:
+        if isinstance(item, objects.Quiz):
             log.log(1, log.msgs["upmod_add_qst"].format(item=item.title))
             resps = user.add_quiz_questions(course, item, test)
             if not test:
