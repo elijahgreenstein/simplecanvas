@@ -1,3 +1,5 @@
+"""Command line management."""
+
 import argparse
 from pathlib import Path
 
@@ -5,6 +7,7 @@ from simplecanvas import cli
 
 
 def main():
+    """Parse command line arguments and execute."""
     pkgdir = Path(__file__).parent
     parser = argparse.ArgumentParser(
         prog="Simple Canvas",

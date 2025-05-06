@@ -82,14 +82,14 @@ def md2html(text, shift="1"):
     cmd = ["pandoc", "-f", "markdown", "-t", "html"]
     if shift:
         cmd.append(f"--shift-heading-level-by={shift}")
-    res = subprocess.run(cmd, input=btext, capture_output=True)
+    res = subprocess.run(cmd, input=btext, capture_output=True, check=True)
     return res.stdout.decode("utf-8")
 
 
 def get_meta(text, metadata_template):
     btext = str.encode(text)
     cmd = ["pandoc", "-f", "markdown", "--template", metadata_template]
-    res = subprocess.run(cmd, input=btext, capture_output=True)
+    res = subprocess.run(cmd, input=btext, capture_output=True, check=True)
     return json.loads(res.stdout.decode("utf-8"))
 
 

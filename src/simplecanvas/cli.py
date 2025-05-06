@@ -1,3 +1,5 @@
+"""Course creation, module creation, and module upload."""
+
 import pathlib
 import pprint
 
@@ -10,6 +12,7 @@ FS = util.FileStructure()
 
 
 def get_env():
+    """Get simplecanvas environment."""
     return jinja2.Environment(
         loader=jinja2.PackageLoader("simplecanvas"),
         autoescape=jinja2.select_autoescape,
@@ -17,6 +20,7 @@ def get_env():
 
 
 def get_user_input(prompt_dict):
+    """Get keyed user input and return keyed responses."""
     res = {}
     for key in prompt_dict:
         res[key] = input(prompt_dict[key])
@@ -24,11 +28,13 @@ def get_user_input(prompt_dict):
 
 
 def get_template_paths(dirname):
+    """Get simplecanvas template paths in ``template/dirname``."""
     env = get_env()
     return env.list_templates(filter_func=lambda x: x.startswith(str(dirname)))
 
 
 def render_template(tpl_name, variables):
+    """Render a template with a dictionary of variables."""
     env = get_env()
     template = env.get_template(tpl_name)
     return template.render(variables)
@@ -38,14 +44,14 @@ def newcourse(name, verb):
     """Create a new course from templates."""
     if name.exists():
         raise FileExistsError(f"'{name}' already exists.")
-    else:
-        user_prompts = util.UserInput()
-        user_input = get_user_input(user_prompts.course)
-        tpls = get_newcourse(user_input)
-        write_newcourse(name, tpls, verb)
+    user_prompts = util.UserInput()
+    user_input = get_user_input(user_prompts.course)
+    tpls = get_newcourse(user_input)
+    write_newcourse(name, tpls, verb)
 
 
 def get_newcourse(user_input):
+    """Get keyed templates rendered from user input."""
     # Get templates
     tpl_names = get_template_paths(str(FS.course))
     # Render templates
@@ -56,6 +62,7 @@ def get_newcourse(user_input):
 
 
 def write_newcourse(name, tpls, verb):
+    """Write rendered templates to default locations."""
     # Set up logger
     log = util.Logger(verb)
     log.log(1, log.msgs["newcourse"].format(course=name))
@@ -67,7 +74,7 @@ def write_newcourse(name, tpls, verb):
     # Write files
     log.log(1, log.msgs["create_files"])
     for tpl in tpls:
-        with open(name / tpl, "w") as f:
+        with open(name / tpl, "w", encoding="utf-8") as f:
             f.write(tpls[tpl])
         log.log(1, log.msgs["create"].format(name=tpl))
 
@@ -92,6 +99,7 @@ def addmod(name, verb):
 
 
 def get_mod_tpls(name, user_input):
+    """Get keyed templates rendered from user input."""
     # Get templates
     tpl_names = get_template_paths(str(FS.mod))
     # Render templates and change output path in process
@@ -103,6 +111,7 @@ def get_mod_tpls(name, user_input):
 
 
 def write_mod(name, tpls, verb):
+    """Write rendered templates to default locations."""
     # Set up logger
     log = util.Logger(verb)
     log.log(1, log.msgs["addmod"].format(mod=name))
@@ -113,7 +122,7 @@ def write_mod(name, tpls, verb):
     # Write files
     log.log(1, log.msgs["create_files"])
     for tpl in tpls:
-        with open(tpl, "w") as f:
+        with open(tpl, "w", encoding="utf-8") as f:
             f.write(tpls[tpl])
         log.log(1, log.msgs["create"].format(name=tpl))
 
@@ -122,9 +131,8 @@ def upmod(name, pkgdir, verb, test):
     """Upload a module to Canvas through API calls."""
     cset = FS.cset
     mpath = FS.mod / name
-    mdjson = pkgdir / FS.mdjson
     if cset.exists() and mpath.exists():
-        # Load module
+        # Load user, course, and module
         user = load_mod(pathlib.Path("./"), mpath, pkgdir / FS.mdjson)
         # Run the upload sequence
         results = upload_seq(user, name, verb, test)
@@ -143,6 +151,7 @@ def upmod(name, pkgdir, verb, test):
 
 
 def load_mod(cpath, mpath, mdjson):
+    """Load User, Course, Module, and all Module items."""
     cset = cpath / FS.cset
     qdesc_path = cpath / FS.qdesc
     user = loaders.load_user(cpath / FS.token)
@@ -155,12 +164,13 @@ def load_mod(cpath, mpath, mdjson):
 
 
 def upload_seq(user, name, verb, test):
+    """Create Module and upload its content."""
     # Set up logger for verbose output
     log = util.Logger(verb)
     log.log(1, log.msgs["upmod"].format(mod=name))
     # Get the course
-    course = [crs for crs in user.courses.values()][0]
-    module = [mod for mod in course.modules.values()][0]
+    course = user.courses.values()[0]
+    module = course.modules.values()[0]
     # Create module
     log.log(1, log.msgs["upmod_mod"])
     mod_resp = user.create(course, module, test)
@@ -180,8 +190,7 @@ def upload_seq(user, name, verb, test):
             log.log(2, log.msgs["details"].format(resp=resp.json()))
     # Move items to module
     move_resp = []
-    for idx in range(len(module.items)):
-        item = module.items[idx]
+    for idx, item in enumerate(module.items):
         log.log(1, log.msgs["upmod_move"].format(item=item.title))
         position = idx + 1
         resp = user.move(course, module, item, position, test)
@@ -193,7 +202,7 @@ def upload_seq(user, name, verb, test):
     # Handle quizzes
     quiz_resp = []
     for item in module.items:
-        if type(item) == objects.Quiz:
+        if isinstance(item) == objects.Quiz:
             log.log(1, log.msgs["upmod_add_qst"].format(item=item.title))
             resps = user.add_quiz_questions(course, item, test)
             if not test:
