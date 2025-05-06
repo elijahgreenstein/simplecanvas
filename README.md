@@ -33,7 +33,7 @@ cd TEST101
 python -m simplecanvas addmod Week01
 ```
 
-Answer the prompts and Simple Canvas will create directory with files for an introduction page, quiz, and discussion board. Edit the pages in `TEST101/Week01` (`intro.md`, `quiz.yaml`, and `disc.md`). To upload the course content to Canvas, type the following and press `enter`:
+Answer the prompts and Simple Canvas will create a directory with files for an introduction page, quiz, and discussion board. Edit the pages in `TEST101/Week01` (`intro.md`, `quiz.yaml`, and `disc.md`). To upload the module contents to Canvas, type the following and press `enter`:
 
 ```
 python -m simplecanvas upmod Week01
