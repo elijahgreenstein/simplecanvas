@@ -1,11 +1,12 @@
+import pathlib
+
 import pytest
 
-from pathlib import Path
 from simplecanvas import objects, loaders, util
 
 
 FS = util.FileStructure()
-DATADIR = Path(__file__).parent / "data"
+DATADIR = pathlib.Path(__file__).parent / "data"
 TEST101 = DATADIR / "TEST101"
 
 
