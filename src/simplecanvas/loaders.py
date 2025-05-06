@@ -1,7 +1,5 @@
 import pathlib
 
-import yaml
-
 from simplecanvas import objects, util
 
 
