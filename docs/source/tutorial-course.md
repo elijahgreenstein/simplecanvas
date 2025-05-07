@@ -71,7 +71,7 @@ We can edit `SC101/_conf/quiz-desc.md` to prepare a default quiz description. We
 This is an open-book quiz:
 
 - You **may** refer to course materials and notes.
-- You **may not** ask classmates, friends, or others for help.
+- You **may not** ask classmates for help.
 
 # Deadline
 
