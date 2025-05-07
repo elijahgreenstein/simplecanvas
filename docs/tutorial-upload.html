@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Upload materials to Canvas</title>
+    <link rel="stylesheet" href="./static/styles.css">
+  </head>
+  <body>
+    <p><a id="topline" href="index.html">Home</a></p>
+    <h1 id="upload-materials-to-canvas">Upload materials to Canvas</h1>
+<p>In this tutorial, we will use Simple Canvas to upload our course materials to Canvas LMS.</p>
+<h2 id="the-upload-command">The upload command</h2>
+<p>Simple Canvas makes the upload of modules simple. Make sure that <code>SC101</code> is the current working directory; then type this command and press <span class="scode">enter</span>:</p>
+<pre><code>python -m simplecanvas -v upmod Week_01</code></pre>
+<p>We used the “verbose” option <code>-v</code> to make Simple Canvas print messages about the upload process. If our settings are configured correctly, Simple Canvas should print the following:</p>
+<pre><code>Uploading module: 'Week_01'
+- Posting module ...
+    - Status: 200
+- Posting item '1.1. Welcome to "SC"!' ...
+    - Status: 200
+- Posting item '1.2. Quiz' ...
+    - Status: 200
+- Posting item '1.3. Discussion' ...
+    - Status: 200
+- Moving item '1.1. Welcome to "SC"!' ...
+    - Status: 200
+- Moving item '1.2. Quiz' ...
+    - Status: 200
+- Moving item '1.3. Discussion' ...
+    - Status: 200
+- Adding questions to '1.2. Quiz' ...
+    - Status: 200
+    - Status: 200
+    - Status: 200
+- Updating points for '1.2. Quiz' ...
+    - Status: 200</code></pre>
+<p>Note the steps in the process:</p>
+<ul>
+<li>Simple Canvas first <em>creates</em> (“posts”) the module.</li>
+<li>Simple Canvas then creates each module item (introduction page, quiz, and discussion).</li>
+<li>Simple Canvas then <em>moves</em> each item to the module.</li>
+<li>Simple Canvas then adds each question to the quiz.</li>
+<li>Finally, Simple Canvas updates the possible points for the quiz.</li>
+</ul>
+<div class="note">
+<p><strong>Note:</strong> A status code of <code>200</code> indicates success. Any other status codes indicate a problem and a failure to post, move, or update the listed item.</p>
+<p>To identify possible issues, first try a test run. Replicate the command above but type <code>-t</code> before <code>upmod</code>. Simple Canvas will print content from the expected API call.</p>
+<p>If the problem is still unclear, replicate the above command but replace <code>-v</code> with <code>-vv</code> for additional verbosity. Simple Canvas will print the responses received with each API call.</p>
+</div>
+<h2 id="next-steps">Next steps</h2>
+<p>Content uploads are as simple as that! For additional customization, refer to the how-to guides:</p>
+<ul>
+<li><a href="howto-course.html">How to customize course settings</a></li>
+<li><a href="howto-module.html">How to customize module settings</a></li>
+<li><a href="howto-quiz.html">How to customize quizzes</a></li>
+</ul>
+<div class="nav">
+<p><a href="tutorial-content.html">Previous</a></p>
+<p><a href="index.html">Home</a></p>
+<p><br/>
+</p>
+</div>
+
+  </body>
+</html>

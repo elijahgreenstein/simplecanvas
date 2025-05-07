@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Set up a new course</title>
+    <link rel="stylesheet" href="./static/styles.css">
+  </head>
+  <body>
+    <p><a id="topline" href="index.html">Home</a></p>
+    <h1 id="set-up-a-new-course">Set up a new course</h1>
+<p>In this tutorial, we will use the Simple Canvas command line interface to set up a new course: “SC101 – Simple Canvas 101.”</p>
+<h2 id="preparation">Preparation</h2>
+<p>We will need an access token to make API calls to Canvas. Follow the <a href="https://community.canvaslms.com/t5/Canvas-Basics-Guide/How-do-I-manage-API-access-tokens-in-my-user-account/ta-p/615312">Canvas instructions</a> to generate an access token. We will use the token shortly.</p>
+<p>Next, determine the API URL for your institution. The URL will look similar to <code>https://canvas.YOURINSTITUTION.edu/api/v1</code>. Be prepared to copy this URL shortly.</p>
+<p>Finally, let’s prepare a directory for our courses. Type the command below and press <span class="scode">enter</span> to create a directory named <code>courses</code> and make it the working directory:</p>
+<pre><code>mkdir courses &amp;&amp; cd courses</code></pre>
+<h2 id="new-course-command">New course command</h2>
+<p>We are now ready to set up a new course with Simple Canvas. Type the following command and press <span class="scode">enter</span>:</p>
+<pre><code>python -m simplecanvas newcourse SC101</code></pre>
+<p>Simple Canvas will now ask you a series of questions:</p>
+<dl>
+<dt><code>&gt; Enter API token</code></dt>
+<dd>
+Copy the access token that you generated on Canvas, paste it here, and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter API URL:</code></dt>
+<dd>
+Copy the API URL for your institution, paste it here, and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter course unique identifier:</code></dt>
+<dd>
+Open your course on Canvas. The URL will end with the path <code>courses/&lt;UID&gt;</code>. Type the identifier in place of <code>&lt;UID&gt;</code> and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter quiz unlock time:</code></dt>
+<dd>
+Simple Canvas will set up a default time to unlock each module quiz. Enter the default unlock time in Coordinated Universal Time (UTC), in the format <code>HH:MM:SS</code>. For example, let’s say that we want our quizzes to unlock at 10:00 AM Pacific Daylight Time (PDT). PDT is seven hours behind UTC, so type <code>17:00:00</code> and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter quiz deadline:</code></dt>
+<dd>
+Simple Canvas will set up a default deadline for each module quiz. Let’s say that we want students to complete the quizzes by 11:00:00 AM PDT, one hour after quizzes unlock. Type <code>18:00:00</code> and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter quiz lock time:</code></dt>
+<dd>
+Students will not be able to access quizzes after the lock time. Let’s give students an extra 30 minutes to submit a late quiz. Type <code>18:30:00</code> and press <span class="scode">enter</span>.
+</dd>
+</dl>
+<p>Simple Canvas will now create a new directory, <code>SC101</code>, several sub-directories, and configuration files.</p>
+<h2 id="file-structure">File structure</h2>
+<p>Let’s explore the files and directories set up by Simple Canvas:</p>
+<pre><code>SC101/
+    _conf/
+        quiz-desc.md
+        settings.yaml
+        token
+    modules/</code></pre>
+<p>The <code>_conf</code> directory contains our course configuration files. We will edit a few of them to finalize our course set up.</p>
+<p>The <code>modules</code> directory is for our course modules. We will set up a new module in the <a href="tutorial-module.html">next tutorial</a>.</p>
+<h2 id="default-quiz-description">Default quiz description</h2>
+<p>We can edit <code>SC101/_conf/quiz-desc.md</code> to prepare a default quiz description. We will format the quiz description with <a href="https://pandoc.org/MANUAL.html#pandocs-markdown">Pandoc’s Markdown syntax</a>. Open <code>quiz-desc.md</code>, delete any text, and write the following:</p>
+<pre><code># Overview
+
+This is an open-book quiz:
+
+- You **may** refer to course materials and notes.
+- You **may not** ask classmates, friends, or others for help.
+
+# Deadline
+
+Submit your quiz by 11:00 AM.</code></pre>
+<div class="note">
+<p><strong>Note:</strong> Notice that we have used a level-one heading: <code># Overview</code>. Canvas reserves level-one <code>&lt;h1&gt;</code> tags for webpage titles. Simple Canvas therefore shifts all headings down one level. Use level-one headings for top-level headings in all content files; Simple Canvas will convert these to level-two, <code>&lt;h2&gt;</code> tags.</p>
+</div>
+<p>Save and close <code>quiz-desc.md</code>. Simple Canvas will use the above description for each quiz, unless we provide an alternative description. Refer to the <a href="howto-quiz.html">guide to quizzes</a> for details about quiz customization.</p>
+<h2 id="token">Token</h2>
+<p>Simple Canvas wrote our Canvas access token to <code>SC101/_conf/token</code>. If your access token changes, you can replace the token in this file.</p>
+<div class="warning">
+<p><strong>Warning:</strong> Do not make the access token public. If you use Git for version control for your course, add <code>token</code> to your <code>.gitignore</code> file.</p>
+</div>
+<h2 id="next-steps">Next steps</h2>
+<p>When you feel comfortable with the Simple Canvas <code>newcourse</code> command, go to the <a href="tutorial-module.html">next tutorial</a>.</p>
+<p>Refer to the <a href="howto-course.html">guide to course settings</a> for additional details about how to customize your course.</p>
+<div class="nav">
+<p><a href="tutorial-install.html">Previous</a></p>
+<p><a href="index.html">Home</a></p>
+<p><a href="tutorial-module.html">Next</a></p>
+</div>
+
+  </body>
+</html>

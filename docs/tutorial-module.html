@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Set up a new module</title>
+    <link rel="stylesheet" href="./static/styles.css">
+  </head>
+  <body>
+    <p><a id="topline" href="index.html">Home</a></p>
+    <h1 id="set-up-a-new-module">Set up a new module</h1>
+<p>In this tutorial, we will use Simple Canvas to add a new module to our course.</p>
+<h2 id="add-a-module">Add a module</h2>
+<p>Change the working directory to <code>SC101</code>. Then, type this command and press <span class="scode">enter</span>:</p>
+<pre><code>python -m simplecanvas addmod Week_01</code></pre>
+<p>Simple Canvas will ask you a series of questions:</p>
+<dl>
+<dt><code>&gt; Enter module title:</code></dt>
+<dd>
+The name of the module as it will appear in Canvas. Type <code>Example module</code> and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter module position:</code></dt>
+<dd>
+This is the position among the modules on campus. Let’s assume that we want to keep an information module at the top of our list of modules. <code>Week_01</code> will, therefore, be our second module. Type <code>2</code> and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter module prefix:</code></dt>
+<dd>
+Simple Canvas automatically prefixes the title of each item in the module (page, quiz, discussion) with a number. This is our first content module, so type <code>1</code> and press <span class="scode">enter</span>.
+</dd>
+<dt><code>&gt; Enter quiz date:</code></dt>
+<dd>
+The Simple Canvas <code>addmod</code> command automatically creates a quiz. Enter the quiz date in the format <span class="scode">YYYY-MM-DD</span>. For example, type <code>2025-05-01</code> and press <span class="scode">enter</span>.
+</dd>
+</dl>
+<p>Simple Canvas will now create a new directory, <code>Week_01</code>, and several files in it.</p>
+<h2 id="file-structure">File structure</h2>
+<p>Let’s explore the files set up by Simple Canvas in <code>SC101/modules/Week_01</code>:</p>
+<pre><code>SC101/
+    _conf/
+    modules/
+        Week_01/
+            _conf.yaml
+            disc.md
+            intro.md
+            quiz.yaml</code></pre>
+<p>Simple Canvas wrote module settings to <code>_conf.yaml</code>. Refer to the <a href="howto-module.html">guide to module settings</a> to learn how to customize these settings.</p>
+<p>Simple Canvas also prepared three files for our module content. By default, Simple Canvas organized these in the following order:</p>
+<ol type="1">
+<li><code>intro.md</code>: an introduction page</li>
+<li><code>quiz.yaml</code>: a quiz</li>
+<li><code>disc.md</code>: a discussion board</li>
+</ol>
+<p>We will edit these files in the <a href="tutorial-content.html">next tutorial</a>.</p>
+<h2 id="next-steps">Next steps</h2>
+<p>When you feel comfortable with <code>addmod</code>, go to the <a href="tutorial-content.html">next tutorial</a>.</p>
+<p>Refer to the <a href="howto-module.html">guide to module settings</a> for additional details about how to customize your module.</p>
+<div class="nav">
+<p><a href="tutorial-course.html">Previous</a></p>
+<p><a href="index.html">Home</a></p>
+<p><a href="tutorial-content.html">Next</a></p>
+</div>
+
+  </body>
+</html>

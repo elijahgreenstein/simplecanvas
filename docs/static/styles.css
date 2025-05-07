@@ -1,0 +1,50 @@
+* {
+  font-family: sans-serif;
+}
+code {
+  font-family: monospace;
+}
+body {
+  max-width: 600px;
+  min-width: 400px;
+  padding: 10px;
+  margin: auto;
+}
+dt, p, dd, li {
+  line-height: 1.5;
+}
+dt code, dd code, p code, li code {
+  background-color: whitesmoke;
+  border: solid lightgrey;
+  border-width: thin;
+  padding: 2px;
+  white-space: nowrap;
+}
+pre {
+  background-color: whitesmoke;
+  border: solid lightgrey;
+  border-width: thin;
+  padding: 4px;
+}
+.warning {
+  border-left: solid red;
+  background-color: mistyrose;
+  padding-left: 24px;
+  padding-right: 6px;
+}
+.note {
+  border-left: solid darkblue;
+  padding-left: 24px;
+  padding-right: 6px;
+}
+.warning p {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.scode {  /* simple code (no background) */
+  font-family: monospace;
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
