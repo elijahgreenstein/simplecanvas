@@ -16,3 +16,7 @@ Follow the tutorial below for a basic introduction to Simple Canvas. Refer to th
     - [How to customize course settings](howto-course.html)
     - [How to customize module settings](howto-module.html)
     - [How to customize quizzes](howto-quiz.html)
+
+## Other
+
+[Source code](https://github.com/elijahgreenstein/simplecanvas)
