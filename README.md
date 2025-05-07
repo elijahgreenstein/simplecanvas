@@ -2,6 +2,8 @@
 
 Simple Canvas is a Python library that enables instructors to quickly develop course materials and upload them to [Canvas LMS by Instructure](https://www.instructure.com/canvas) through API calls.
 
+Refer to the [Simple Canvas documentation](https://elijahgreenstein.github.io/simplecanvas/) for detailed instructions. Basic usage described below.
+
 ## Installation
 
 Simple Canvas requires installations of [Python](https://www.python.org) and [Pandoc](https://pandoc.org). First install Python and Pandoc. Then clone this repository, change the working directory to `simplecanvas`, and use `pip` to install Simple Canvas:
