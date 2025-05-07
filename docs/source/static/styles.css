@@ -10,15 +10,9 @@ body {
   padding: 10px;
   margin: auto;
 }
-@media only screen and (max-width: 600px) {
-  body {
-    min-width: 600px;
-    padding: 5px;
-    margin: auto;
-  }
-}
 @media only screen and (min-width: 600px) {
   body {
+    max-width: 800px;
     min-width: 600px;
     padding: 5px;
     margin: auto;
