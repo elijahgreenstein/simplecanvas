@@ -8,7 +8,68 @@
   <body>
     <p><a id="topline" href="index.html">Home</a></p>
     <h1 id="how-to-customize-course-settings">How to customize course settings</h1>
-<p>Coming soon!</p>
+<p>This guide explains how to customize course settings.</p>
+<h2 id="setup">Setup</h2>
+<p>Create a new course:</p>
+<pre><code>python -m simplecanvas newcourse &lt;NAME&gt;</code></pre>
+<p>Answer the question prompts from Simple Canvas. After Simple Canvas creates a course, open <code>&lt;NAME&gt;/_conf/settings.yaml</code>.</p>
+<h2 id="default-settings">Default settings</h2>
+<p>The default settings are shown below, where <code>&lt;USER&gt;</code> represents answers to the Simple Canvas prompts.</p>
+<pre><code>course:
+  course_name: "&lt;NEW&gt;"
+  course_id: "&lt;USER&gt;"
+  course_url: &lt;USER&gt;
+discussion:
+  discussion_type: threaded
+  published: false
+quiz:
+  hide_results: always
+  quiz_type: assignment
+  shuffle_answers: true
+times:
+  unlock_at: "&lt;USER&gt;"
+  due_at: "&lt;USER&gt;"
+  lock_at: "&lt;USER&gt;"</code></pre>
+<h2 id="change-discussion-settings">Change discussion settings</h2>
+<p>Default discussion settings follow <code>discussion:</code>. The <a href="https://canvas.instructure.com/doc/api/index.html">Canvas API documentation</a> provides details about other options for “<a href="https://canvas.instructure.com/doc/api/discussion_topics.html#method.discussion_topics.create">Discussion Topics</a>”. Follow <a href="https://yaml.org">YAML</a> syntax to add other parameters.</p>
+<p>Example:</p>
+<pre><code>discussion:
+  discussion_type: threaded
+  published: false
+  require_initial_post: true
+  sort_order: asc</code></pre>
+<p>With these settings, Simple Canvas will upload discussions that:</p>
+<ol type="1">
+<li>are “threaded,”</li>
+<li>are not published at upload (instructors will need to publish them manually on Canvas),</li>
+<li>require students to make a post before viewing other posts, and</li>
+<li>are sorted in “ascending” order.</li>
+</ol>
+<div class="note">
+<p><strong>Note:</strong> Boolean options take the values <code>true</code> or <code>false</code>. One-word strings do not need to be placed in quotation marks (<code>"string"</code>); strings with punctuation should be placed in quotation marks (<code>"string: punctuation"</code>) to ensure that Simple Canvas parses the text correctly.</p>
+</div>
+<h2 id="change-quiz-settings">Change quiz settings</h2>
+<p>Default quiz settings follow <code>quiz:</code>. The <a href="https://canvas.instructure.com/doc/api/index.html">Canvas API documentation</a> provides details about other options for “<a href="https://canvas.instructure.com/doc/api/quizzes.html#method.quizzes/quizzes_api.create">Discussion Topics</a>”. Follow <a href="https://yaml.org">YAML</a> syntax to add other parameters.</p>
+<p>Example:</p>
+<pre><code>quiz:
+  hide_results: always
+  quiz_type: practice_quiz
+  shuffle_answers: true
+  time_limit: 5
+  one_question_at_a_time</code></pre>
+<p>With these settings, Simple Canvas will upload quizzes that:</p>
+<ol type="1">
+<li>hide results,</li>
+<li>are practice quizzes rather than assignments,</li>
+<li>shuffle answers,</li>
+<li>impose a five-minute time limit,</li>
+<li>and require students to answer questions one at a time.</li>
+</ol>
+<h2 id="change-quiz-times">Change quiz times</h2>
+<p>Edit the times following <code>unlock_at</code>, <code>due_at</code>, and <code>lock_at</code> to change the default quiz times.</p>
+<div class="note">
+<p><strong>Note:</strong> This may be necessary during a term due to changes to/from daylight savings.</p>
+</div>
 
   </body>
 </html>
