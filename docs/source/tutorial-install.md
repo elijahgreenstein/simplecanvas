@@ -23,7 +23,7 @@ pip install .
 
 - `jinja2` ([Jinja](https://jinja.palletsprojects.com/en/stable/))
 - `requests` ([Requests](https://docs.python-requests.org/en/latest/index.html))
-- `yaml` ([PyYAML](https://pyyaml.org))
+- `pyyaml` ([PyYAML](https://pyyaml.org))
 
 ## Next steps
 
