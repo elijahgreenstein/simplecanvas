@@ -1,5 +1,5 @@
 # Use this Makefile to build the documentation in `docs` and commit the build to
-# the `gh-pages` branch.
+# the `gh-pages` branch. Use `make push` to push `gh-pages` branch to GitHub.
 #
 # To build the documentation locally, use the Makefile in `docs`.
 
@@ -20,3 +20,9 @@ docs :
 	rm -rf $(BLD_DOCS)
 	cd $(DOC) && make
 	cd $(BLD_DOCS) && $(ADD) && $(COM) && $(PUSH)
+
+.PHONY : push
+push :
+	git checkout $(GHP)
+	git push
+	git checkout main
