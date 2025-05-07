@@ -10,6 +10,13 @@ body {
   padding: 10px;
   margin: auto;
 }
+@media only screen and (max-width: 600px) {
+  body {
+    min-width: 600px;
+    padding: 5px;
+    margin: auto;
+  }
+}
 dt, p, dd, li {
   line-height: 1.5;
 }
