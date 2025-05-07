@@ -9,7 +9,7 @@ readme = "README.md"
 dependencies = [
   "jinja2",
   "requests",
-  "yaml",
+  "pyyaml",
 ]
 
 [tool.black]
