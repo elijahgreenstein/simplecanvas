@@ -8,7 +8,67 @@
   <body>
     <p><a id="topline" href="index.html">Home</a></p>
     <h1 id="how-to-customize-module-settings">How to customize module settings</h1>
-<p>Coming soon!</p>
+<h2 id="setup">Setup</h2>
+<p>Set up a new module with <code>addmod</code> (replace <code>&lt;MODULE&gt;</code> with the module name):</p>
+<pre><code>python -m simplecanvas addmod &lt;MODULE&gt;</code></pre>
+<p>Answer the questions from Simple Canvas. Simple Canvas will create the files listed below under <code>&lt;MODULE&gt;</code>:</p>
+<pre><code>&lt;COURSE&gt;/
+    modules/
+        &lt;MODULE&gt;/
+            _conf.py
+            disc.md
+            intro.md
+            quiz.yaml</code></pre>
+<h2 id="default-settings">Default settings</h2>
+<p>Simple Canvas sets up the default module settings in <code>&lt;MODULE&gt;/_conf.py</code>. Default settings appear as below, where <code>&lt;USER&gt;</code> represents user replies to Simple Canvas prompts:</p>
+<pre><code>module_name: "&lt;MODULE&gt;"
+title: "&lt;USER&gt;"
+position: &lt;USER&gt;
+item_order:
+  - [intro.md, page]
+  - [quiz.yaml, quiz]
+  - [disc.md, disc]</code></pre>
+<h2 id="default-module-files">Default module files</h2>
+<p>By default, Simple Canvas creates three files with <code>addmod</code>:</p>
+<ol type="1">
+<li><code>intro.md</code>: an introduction page</li>
+<li><code>quiz.yaml</code>: a quiz</li>
+<li><code>disc.md</code>: a discussion board</li>
+</ol>
+<h2 id="remove-an-item">Remove an item</h2>
+<p>Simple Canvas will only upload files named in the list under <code>item_order</code>. To remove an item from the module, delete the corresponding line.</p>
+<h3 id="example">Example</h3>
+<pre><code>item_order:
+  - [intro.md, page]
+  - [disc.md, disc]</code></pre>
+<p>With the above settings, Simple Canvas will only upload the introduction page and discussion board prompt. Simple Canvas will ignore all other files in <code>modules/&lt;MODULE&gt;</code>.</p>
+<h2 id="reorder-the-items">Reorder the items</h2>
+<p>Simple Canvas will order the content on Canvas in the order the files appear under <code>item_order</code>. Reorder the list before any upload to Canvas to determine the order of items uploaded with <code>upmod</code>.</p>
+<pre><code>item_order:
+  - [disc.md, disc]
+  - [quiz.yaml, quiz]
+  - [intro.md, page]</code></pre>
+<p>With the above settings, Simple Canvas will order the items in the module as follows: first a discussion board, then a quiz, last a page.</p>
+<div class="note">
+<p><strong>Note:</strong> Simple Canvas prefixes the title of each default item with a numeric code that follows the default order. Edit the title in each file to correspond to the new order. For example, change <code>1.3. Discussion</code> to <code>1.1. Discussion</code>. Alternatively, remove the numeric code: <code>Discussion</code>.</p>
+</div>
+<h2 id="add-items">Add items</h2>
+<p>Simple Canvas will upload all files in <code>modules/&lt;MODULE&gt;</code> listed under <code>item_order</code>. To add a new file, add an entry to the list. Write the entry with the form:</p>
+<pre><code>  - [&lt;FILE_NAME&gt;, &lt;ITEM_TYPE&gt;]</code></pre>
+<div class="note">
+<p><strong>Note:</strong> Two spaces precede the hyphen <code>-</code>.</p>
+</div>
+<p>Write the file name in <code>modules/&lt;MODULE&gt;</code> in place of <code>&lt;FILE_NAME&gt;</code>. Write the type of the item in place of <code>&lt;ITEM_TYPE&gt;</code>. Simple Canvas supports three item types: <code>page</code>, <code>quiz</code>, or <code>disc</code> (discussion).</p>
+<h3 id="example-1">Example</h3>
+<pre><code>item_order:
+  - [welcome.md, page]
+  - [notes.md, page]
+  - [discussion.md, disc]
+  - [check.yaml, quiz]
+  - [thoughts.md, disc]
+  - [review.yaml, quiz]
+  - [handout.md, page]</code></pre>
+<p>With the above settings, Simple Canvas will upload three pages, two discussions, and two quizzes to Canvas with the <code>upmod</code> command. Note that the names of the files do not correspond to the default names (<code>intro.md</code>, <code>quiz.yaml</code>, and <code>disc.md</code>). Simple Canvas can upload files with any name, as long as (1) the file appears under <code>item_order</code>, (2) the type of the file follows the file name, and (3) the file exists in <code>modules/&lt;MODULE&gt;</code>.</p>
 
   </body>
 </html>
