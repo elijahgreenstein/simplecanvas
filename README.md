@@ -1,6 +1,6 @@
 # Simple Canvas
 
-Simple Canvas is a Python library that enables instructors to quickly develop course materials and upload them to [Canvas LMS by Instructure](https://www.instructure.com/canvas) through API calls.
+Simple Canvas is a Python library that enables instructors to develop course materials quickly and upload them to [Canvas LMS by Instructure](https://www.instructure.com/canvas) through API calls.
 
 Refer to the [Simple Canvas documentation](https://elijahgreenstein.github.io/simplecanvas/) for detailed instructions. Basic usage described below.
 
