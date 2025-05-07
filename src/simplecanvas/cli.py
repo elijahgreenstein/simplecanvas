@@ -46,6 +46,8 @@ def newcourse(name, verb):
         raise FileExistsError(f"'{name}' already exists.")
     user_prompts = util.UserInput()
     user_input = get_user_input(user_prompts.course)
+    # Add course (directory) name to input
+    user_input["course_name"] = name
     tpls = get_newcourse(user_input)
     write_newcourse(name, tpls, verb)
 
@@ -87,6 +89,8 @@ def addmod(name, verb):
         # Load course settings and get user input
         cset = util.load_yaml(cset)
         user_input = get_user_input(util.UserInput().mod)
+        # Add module name (directory) to input
+        user_input["module_name"] = name
         # Update user input with times from course settings
         user_input.update(cset["times"])
         # Get templates and write
