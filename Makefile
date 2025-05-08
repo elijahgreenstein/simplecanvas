@@ -17,6 +17,9 @@ docs : $(GIT)
 		git commit -m "Update docs" && \
 		git push origin $(GHP)
 
+.PHONY : git
+git : $(GIT)
+
 $(GIT) :
 	rm -rf $(BLD)
 	mkdir $(BLD)
@@ -27,3 +30,7 @@ push :
 	git checkout $(GHP)
 	git push
 	git checkout main
+
+.PHONY : clean
+clean :
+	cd $(DOC) && make clean
