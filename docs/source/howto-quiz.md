@@ -22,13 +22,13 @@ questions:
   - question: "Write about ..."
 ```
 
-As seen above, a Simple Canvas quiz requires a `title`, `description`, three `times`, and a list of `questions`. 
+As seen above, a Simple Canvas quiz requires a `title`, `description`, `times`, and a list of `questions`. 
 
 ## Quiz description
 
 Simple Canvas will use the default quiz description in `<COURSE>/_conf/quiz-desc.md` when `description` is set to `null`.
 
-To add a multi-line description to a quiz, follow the YAML "[literal style](https://yaml.org/spec/1.2.2/#812-literal-style)". Add a `|` character after `description:`, then write the custom description below `description: |`. Each line of the custom description must begin with two spaces.
+To add a multi-line description to a quiz, follow the YAML "[literal style](https://yaml.org/spec/1.2.2/#812-literal-style)". Replace `description: null` with `description: |`, then write the custom description below. Each line of the custom description must begin with two spaces.
 
 ### Example
 
@@ -43,7 +43,7 @@ This is a unique quiz description.
 - of items
 ```
 
-Markdown-formatted description as part of the YAML-formatted quiz:
+Markdown-formatted description as part of a YAML-formatted quiz:
 
 ```
 description: |
