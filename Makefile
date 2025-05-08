@@ -5,21 +5,22 @@
 
 DOC := docs
 BLD := $(DOC)/build
-BLD_DOCS := $(BLD)/docs
+OUT := docs
 GHP := gh-pages
-
-ADD := git add --all
-COM := git commit -m "Update docs"
-PUSH := git push origin $(GHP)
+GIT := $(BLD)/.git
 
 .PHONY : docs
-docs :
+docs : $(GIT)
+	cd $(DOC) && make && make prune
+	cd $(BLD)/$(OUT) && \
+		git add --all && \
+		git commit -m "Update docs" && \
+		git push origin $(GHP)
+
+$(GIT) :
 	rm -rf $(BLD)
 	mkdir $(BLD)
 	git clone .git --branch $(GHP) $(BLD)
-	rm -rf $(BLD_DOCS)
-	cd $(DOC) && make
-	cd $(BLD_DOCS) && $(ADD) && $(COM) && $(PUSH)
 
 .PHONY : push
 push :
