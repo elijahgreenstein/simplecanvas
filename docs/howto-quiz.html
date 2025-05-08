@@ -8,7 +8,48 @@
   <body>
     <p><a id="topline" href="index.html">Home</a></p>
     <h1 id="how-to-customize-quizzes">How to customize quizzes</h1>
-<p>Coming soon!</p>
+<h2 id="default-quizzes">Default quizzes</h2>
+<p>The default quiz created by the Simple Canvas <code>addmod</code> command is as follows:</p>
+<pre><code>title: "1.2. Quiz"
+description: null
+times:
+  unlock_at: "2025T123Z"
+  due_at: "2025T123Z"
+  lock_at: "2025T123Z"
+questions:
+  - question: "What is ..."
+    correct:
+      - "Answer 1"
+      - "Answer 2"
+    incorrect:
+      - "Answer 3"
+      - "Answer 4"
+  - question: "Write about ..."</code></pre>
+<p>As seen above, a Simple Canvas quiz requires a <code>title</code>, <code>description</code>, three <code>times</code>, and a list of <code>questions</code>.</p>
+<h2 id="quiz-description">Quiz description</h2>
+<p>Simple Canvas will use the default quiz description in <code>&lt;COURSE&gt;/_conf/quiz-desc.md</code> when <code>description</code> is set to <code>null</code>.</p>
+<p>To add a multi-line description to a quiz, follow the YAML “<a href="https://yaml.org/spec/1.2.2/#812-literal-style">literal style</a>”. Add a <code>|</code> character after <code>description:</code>, then write the custom description below <code>description: |</code>. Each line of the custom description must begin with two spaces.</p>
+<h3 id="example">Example</h3>
+<p>Markdown-formatted description:</p>
+<pre><code># Overview
+
+This is a unique quiz description.
+
+- A list
+- of items</code></pre>
+<p>Markdown-formatted description as part of the YAML-formatted quiz:</p>
+<pre><code>description: |
+  # Overview
+
+  This is a unique quiz description.
+
+  - A list
+  - of items
+times:</code></pre>
+<h2 id="quiz-times">Quiz times</h2>
+<p>Simple Canvas quizzes require three times: <code>unlock_at</code>, <code>due_at</code>, and <code>lock_at</code>. Each time must follow the format <code>&lt;DATE&gt;T&lt;TIME&gt;Z</code>. Note the letter <code>T</code> between the date and time and the letter <code>Z</code> after the time. The date must follow the format <code>YYYY-MM-DD</code> (year-month-day) and the time must follow the format <code>HH:MM:SS</code> (hour:minute:second).</p>
+<h2 id="quiz-questions">Quiz questions</h2>
+<p>Refer to <a href="tutorial-content.html#quizzes">Part 4 of the tutorial</a> for details about how to add, remove, and reorder questions.</p>
 
   </body>
 </html>
