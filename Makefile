@@ -22,8 +22,9 @@ git : $(GIT)
 
 $(GIT) :
 	rm -rf $(BLD)
-	mkdir $(BLD)
 	git clone .git --branch $(GHP) $(BLD)
+	rm -rf $(BLD)/$(OUT)
+	mkdir $(BLD)/$(OUT)
 
 .PHONY : push
 push :
