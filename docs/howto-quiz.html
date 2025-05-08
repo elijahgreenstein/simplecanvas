@@ -25,10 +25,10 @@ questions:
       - "Answer 3"
       - "Answer 4"
   - question: "Write about ..."</code></pre>
-<p>As seen above, a Simple Canvas quiz requires a <code>title</code>, <code>description</code>, three <code>times</code>, and a list of <code>questions</code>.</p>
+<p>As seen above, a Simple Canvas quiz requires a <code>title</code>, <code>description</code>, <code>times</code>, and a list of <code>questions</code>.</p>
 <h2 id="quiz-description">Quiz description</h2>
 <p>Simple Canvas will use the default quiz description in <code>&lt;COURSE&gt;/_conf/quiz-desc.md</code> when <code>description</code> is set to <code>null</code>.</p>
-<p>To add a multi-line description to a quiz, follow the YAML “<a href="https://yaml.org/spec/1.2.2/#812-literal-style">literal style</a>”. Add a <code>|</code> character after <code>description:</code>, then write the custom description below <code>description: |</code>. Each line of the custom description must begin with two spaces.</p>
+<p>To add a multi-line description to a quiz, follow the YAML “<a href="https://yaml.org/spec/1.2.2/#812-literal-style">literal style</a>”. Replace <code>description: null</code> with <code>description: |</code>, then write the custom description below. Each line of the custom description must begin with two spaces.</p>
 <h3 id="example">Example</h3>
 <p>Markdown-formatted description:</p>
 <pre><code># Overview
@@ -37,7 +37,7 @@ This is a unique quiz description.
 
 - A list
 - of items</code></pre>
-<p>Markdown-formatted description as part of the YAML-formatted quiz:</p>
+<p>Markdown-formatted description as part of a YAML-formatted quiz:</p>
 <pre><code>description: |
   # Overview
 
