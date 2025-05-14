@@ -43,7 +43,7 @@ pre {
   padding: 4px;
 }
 .warning {
-  border-left: solid red;
+  border-left: solid darkorange;
   background-color: mistyrose;
   padding-left: 24px;
   padding-right: 6px;
